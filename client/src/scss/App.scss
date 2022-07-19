@@ -1,0 +1,48 @@
+@import "~bootstrap/scss/bootstrap";
+
+.App {
+	text-align: center;
+	justify-content: center;
+}
+
+.post-container {
+	margin: 5% auto;
+	width: 85vw;
+	max-width: 500px;
+	border-radius: 10px 100px / 10px 100px;
+	overflow: hidden;
+}
+.post-details {
+	align-items: center;
+}
+
+.post-location {
+	border: none;
+	width: 50%;
+	text-align: left;
+}
+
+.post-date {
+  border: none;
+	width: 50%;
+	text-align: right;
+}
+.post-title {
+
+}
+
+.post-description {
+}
+
+.btn {
+  margin: 10px;
+  align-self: center;
+  width: 150px;
+	border-radius: 0px 20px / 0px 20px;
+}
+
+// .post-container:hover{
+//   .post-description {
+//     display: block;
+//   }
+// }
