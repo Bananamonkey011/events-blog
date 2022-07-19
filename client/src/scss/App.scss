@@ -1,16 +1,35 @@
 @import "~bootstrap/scss/bootstrap";
-
+.page {
+	background-color: darkslategray;
+}
 .App {
 	text-align: center;
 	justify-content: center;
 }
+.body {
+	display: grid;
+	grid-template-columns: 1fr;
+}
 
+.btn {
+	margin: 10px;
+	align-self: center;
+	width: 150px;
+	border-radius: 0px 20px / 0px 20px;
+}
+
+// Posts
+
+.Posts {
+	padding-inline-start: 10%;
+}
 .post-container {
 	margin: 5% auto;
 	width: 85vw;
 	max-width: 500px;
 	border-radius: 10px 100px / 10px 100px;
 	overflow: hidden;
+	border: none;
 }
 .post-details {
 	align-items: center;
@@ -23,26 +42,86 @@
 }
 
 .post-date {
-  border: none;
+	border: none;
 	width: 50%;
 	text-align: right;
 }
-.post-title {
+// Events
 
+.MyEvents {
+	display: none;
+}
+.MyEventsSideBar {
+	background-color: slategray;
 }
 
-.post-description {
+.my-events {
+	background-color: slategray;
+}
+.my-events-title {
+	display: none;
+}
+.my-event-item {
+	width: 90%;
+	margin: 20px auto;
+}
+.my-event-item-thumbnail {
+	border: none;
+	border-radius: 10px 100px / 10px 100px;
+	height: fit-content;
+	color: white;
+	overflow: hidden;
+	transition: 0.5s;
+}
+.my-event-item:hover {
+	.my-event-item-thumbnail {
+		border-radius: 0px;
+	}
+}
+.my-event-item-img {
+	transform: scale(1.03);
+	justify-self: center;
+	filter: brightness(70%) blur(2px);
+}
+.my-event-item-thumbnail-container {
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+}
+.my-event-item-title {
+	font-size: 1.5rem;
+	align-self: center;
+	justify-self: center;
 }
 
-.btn {
-  margin: 10px;
-  align-self: center;
-  width: 150px;
-	border-radius: 0px 20px / 0px 20px;
+.my-event-item-description {
+	background-color: rgb(255, 255, 255, 0.3);
+	color: black;
+}
+.my-event-item-details {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+.my-event-item-location {
+	padding: 20px;
+	align-self: center;
+	justify-self: left;
+}
+.my-event-item-date {
+	padding: 20px;
+	align-self: center;
+	justify-self: right;
 }
 
-// .post-container:hover{
-//   .post-description {
-//     display: block;
-//   }
-// }
+
+
+@media screen and (min-width: 992px) {
+	.MyEvents {
+		display: block;
+	}
+	.body {
+		grid-template-columns: 1fr 2fr;
+	}
+	.my-events-title {
+		display: block;
+	}
+}
