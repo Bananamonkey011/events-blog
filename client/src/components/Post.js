@@ -30,15 +30,15 @@ const Post = () => {
 			/>
 
 			<ListGroup horizontal className="post-details">
-				<ListGroup.Item className="post-location">
+				<li className="post-location">
 					1 Allen Ct. Plainsboro, NJ 08536
-				</ListGroup.Item>
-				<ListGroup.Item className="post-date">
+				</li>
+				<li className="post-date">
 					April 16th 2023 8:00PM
-				</ListGroup.Item>
+				</li>
 			</ListGroup>
 
-			<Card.Body>
+			<Card.Body className="post-body">
 				<Card.Title className="post-title">
 					Manan's 20th Birthday Party
 				</Card.Title>

@@ -1,4 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
+* {
+	margin: 0;
+}
+li {
+	list-style: none;
+}
 .page {
 	background-color: darkslategray;
 }
@@ -21,42 +27,49 @@
 // Posts
 
 .Posts {
-	padding-inline-start: 10%;
+	padding-inline: 5%;
 }
 .post-container {
 	margin: 5% auto;
-	width: 85vw;
-	max-width: 500px;
-	border-radius: 10px 100px / 10px 100px;
+	width: 90%;
+	max-width: 450px;
+	border-radius: 1.5% 15% / 1.5% 15%;
 	overflow: hidden;
 	border: none;
+	background-color: rgb(255,255,255, .5);
 }
 .post-details {
 	align-items: center;
 }
 
+.post-body {
+}
 .post-location {
 	border: none;
 	width: 50%;
 	text-align: left;
+	background-color: none;
+	padding: 5%;
 }
 
 .post-date {
 	border: none;
 	width: 50%;
 	text-align: right;
+	background-color: none;
+	padding: 5%;
 }
-// Events
+// My Events
 
 .MyEvents {
 	display: none;
 }
 .MyEventsSideBar {
-	background-color: slategray;
+	background-color: darkslategray;
 }
 
 .my-events {
-	background-color: slategray;
+	background-color: darkslategray;
 }
 .my-events-title {
 	display: none;
@@ -67,7 +80,7 @@
 }
 .my-event-item-thumbnail {
 	border: none;
-	border-radius: 10px 100px / 10px 100px;
+	border-radius: .5vw 5vw / .5vw 5vw;
 	height: fit-content;
 	color: white;
 	overflow: hidden;
@@ -112,6 +125,36 @@
 	justify-self: right;
 }
 
+//Create Event
+.create-event {
+	justify-content: center;
+}
+.create-event-title {
+	display: none;
+}
+.create-event-form {
+	text-align: center;
+}
+.create-event-form-group {
+	padding: 10px;
+	text-align: center;
+}
+.create-event-form-label {
+	font-size: large;
+	font-weight: bold;
+	margin: 0 auto;
+}
+
+.create-event-form-entry {
+	width: 90%;
+	background-color: rgb(255,255,255,.25);
+	padding: 5px;
+	padding-inline: 20px;
+	border: none;
+	border-radius: .25vw 2.5vw / .25vw 2.5vw;
+	border-bottom: 1px solid black;
+}
+.create-event-form-entry::placeholder{color: lightgray;}
 
 
 @media screen and (min-width: 992px) {
@@ -119,9 +162,12 @@
 		display: block;
 	}
 	.body {
-		grid-template-columns: 1fr 2fr;
+		grid-template-columns: 1fr 1.5fr 1fr;
 	}
-	.my-events-title {
+	.create-event-title, .my-events-title {
 		display: block;
+	}
+	.post-container {
+		border-radius: .5vw 5vw / .5vw 5vw;
 	}
 }
