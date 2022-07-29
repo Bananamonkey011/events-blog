@@ -7,7 +7,24 @@ import Fade from "react-bootstrap/Fade";
 import Button from "react-bootstrap/Button";
 import {BsClipboardX} from "react-icons/bs";
 
-const MyEventItem = () => {
+const getFormatedDateTime = (ISO) => {
+	const date = new Date(ISO).toLocaleString("en-US", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+	});
+	const day = new Date(ISO).toLocaleString("en-US", {
+		weekday: "short",
+	});
+	const time = new Date(ISO).toLocaleString("en-US", {
+		hour: "numeric",
+		minute: "numeric",
+		hour12: true,
+	});
+	return (<>{date} <br/> {day+", "+time}</>);
+}
+
+const MyEventItem = ({event}) => {
 	const [showDescription, setShowDescription] = useState(false);
 	const MouseOver = () => {
 		setShowDescription(true);
@@ -15,6 +32,10 @@ const MyEventItem = () => {
 	const MouseOut = () => {
 		setShowDescription(false);
 	};
+
+	// if (event.picture === "") {
+	// 	event.picture = "https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg"
+	// }
 	return (
 		<div
 			className="my-event-item"
@@ -28,16 +49,16 @@ const MyEventItem = () => {
 			>
 				<Card.Img
 					className="my-event-item-img"
-					src="https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,h_1200,q_75,w_1200/v1/clients/irving-redesign/Events_Page_Header_2903ed9c-40c1-4f6c-9a69-70bb8415295b.jpg"
+					src={event.picture}
 				/>
 
 				<Card.ImgOverlay className="my-event-item-thumbnail-container">
 					<Card.Header className="my-event-item-title">
-						This is the Event Title{" "}
+						{event.title}
 					</Card.Header>
 					<div className="my-event-item-details">
-						<div className="my-event-item-location">online</div>
-						<div className="my-event-item-date">8:00 PM</div>
+						<div className="my-event-item-location">{event.location}</div>
+						<div className="my-event-item-date">{getFormatedDateTime(event.datetime)}</div>
 					</div>
 				</Card.ImgOverlay>
 			</Card>
@@ -51,11 +72,7 @@ const MyEventItem = () => {
 					<Card>
 						<Card.Body>
 							<Card.Text>
-								Lorem ipsum dolor sit amet consectetur
-								adipisicing elit. Quibusdam voluptate adipisci
-								maiores magni officia amet labore odit commodi
-								nostrum nihil ut ducimus dolore quisquam,
-								molestiae in, quos ipsam reprehenderit pariatur!
+								{event.description}
 							</Card.Text>
 						</Card.Body>
 					<Button>Un RSVP <BsClipboardX/></Button>

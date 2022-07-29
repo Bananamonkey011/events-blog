@@ -2,6 +2,9 @@
 * {
 	margin: 0;
 }
+p {
+	margin: 0;
+}
 li {
 	list-style: none;
 }
@@ -36,20 +39,36 @@ li {
 	border-radius: 1.5% 15% / 1.5% 15%;
 	overflow: hidden;
 	border: none;
-	background-color: rgb(255,255,255, .5);
+	background-color: rgb(255, 255, 255, 0.5);
 }
+
+// .post-img[src=""]:empty +
+.post-img{
+	max-height: 35vh;
+}
+.post-img[src=""] {
+	display: none;
+}
+
+.post-container[imgsrc=""] {
+	border-radius: 1.5% 15% / 1.5% 25%;
+}
+
 .post-details {
 	align-items: center;
 }
 
 .post-body {
+	padding: 0;
+	padding-inline: 5%;
 }
 .post-location {
 	border: none;
 	width: 50%;
 	text-align: left;
 	background-color: none;
-	padding: 5%;
+	padding: 1%;
+	padding-inline: 5%;
 }
 
 .post-date {
@@ -57,7 +76,17 @@ li {
 	width: 50%;
 	text-align: right;
 	background-color: none;
-	padding: 5%;
+	padding: 1%;
+	padding-inline: 5%;
+}
+.card-img-top {
+	width: 100%;
+	// max-height: 55vw;
+	object-fit: cover;
+}
+
+.post-timestamp {
+	color: lightgrey;
 }
 // My Events
 
@@ -80,11 +109,18 @@ li {
 }
 .my-event-item-thumbnail {
 	border: none;
-	border-radius: .5vw 5vw / .5vw 5vw;
+	border-radius: 0.5vw 5vw / 0.5vw 5vw;
 	height: fit-content;
 	color: white;
 	overflow: hidden;
 	transition: 0.5s;
+	// background-color: rgb(0, 0, 0, 0.5);
+	// background: rgb(4, 11, 153, 0);
+	background: linear-gradient(
+		to bottom right,
+		rgba(4, 11, 153, 0.5) 0%,
+		rgba(0, 255, 186, 0.25) 100%
+	);
 }
 .my-event-item:hover {
 	.my-event-item-thumbnail {
@@ -95,10 +131,16 @@ li {
 	transform: scale(1.03);
 	justify-self: center;
 	filter: brightness(70%) blur(2px);
+	max-height: 35vh;
 }
 .my-event-item-thumbnail-container {
 	display: grid;
 	grid-template-rows: 1fr 1fr;
+}
+.card-img[src=""] {
+	height: 50vh;
+	background-color: black;
+	opacity: 0;
 }
 .my-event-item-title {
 	font-size: 1.5rem;
@@ -126,6 +168,11 @@ li {
 }
 
 //Create Event
+.CreateEvent {
+	display: none;
+}
+.CreateEventSidebar {
+}
 .create-event {
 	justify-content: center;
 }
@@ -147,27 +194,40 @@ li {
 
 .create-event-form-entry {
 	width: 90%;
-	background-color: rgb(255,255,255,.25);
+	background-color: rgb(255, 255, 255, 0.25);
 	padding: 5px;
 	padding-inline: 20px;
 	border: none;
-	border-radius: .25vw 2.5vw / .25vw 2.5vw;
+	border-radius: 0.25vw 2.5vw / 0.25vw 2.5vw;
 	border-bottom: 1px solid black;
 }
-.create-event-form-entry::placeholder{color: lightgray;}
-
-
+.create-event-form-entry::placeholder {
+	color: lightgray;
+}
+@media screen and (max-height: 700px) {
+	.post-img {
+		max-height: 45vh;
+	}
+}
 @media screen and (min-width: 992px) {
 	.MyEvents {
+		display: block;
+	}
+	.CreateEvent {
 		display: block;
 	}
 	.body {
 		grid-template-columns: 1fr 1.5fr 1fr;
 	}
-	.create-event-title, .my-events-title {
+	.create-event-title,
+	.my-events-title {
 		display: block;
 	}
 	.post-container {
-		border-radius: .5vw 5vw / .5vw 5vw;
+		border-radius: 0.5vw 5vw / 0.5vw 5vw;
+	}
+
+	.card-img-top {
+		height: 30vw;
 	}
 }

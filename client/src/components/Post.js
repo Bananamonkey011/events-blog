@@ -5,55 +5,93 @@ import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { BsClipboardCheck } from "react-icons/bs";
 import { useState } from "react";
+import axios from "axios";
 
 // Img Src
 // Location
 // Date
 // Title
 // Description
+const getFormatedDateTime = (ISO) => {
+	const date = new Date(ISO).toLocaleString("en-US", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+	});
+	const day = new Date(ISO).toLocaleString("en-US", {
+		weekday: "short",
+	});
+	const time = new Date(ISO).toLocaleString("en-US", {
+		hour: "numeric",
+		minute: "numeric",
+		hour12: true,
+	});
+	return (<>{date} <br/> {day+", "+time}</>);
+}
 
-const Post = () => {
-    const [showDescription, setShowDescription] = useState(false);
-    const MouseOver = () => {
-        setShowDescription(true);
+const Post = ({ post }) => {
+	const [showDescription, setShowDescription] = useState(false);
+	const MouseOver = () => {
+		setShowDescription(true);
+	};
+	const MouseOut = () => {
+		setShowDescription(false);
+	};
 
-    }
-    const MouseOut = () => {
-        setShowDescription(false);
-    }
+	const handleRSVP = () => {
+		axios.put(process.env.REACT_APP_SERVER_URL + "/addAttendee", {
+			user_id: "62e2b8403fd0fc21fd2d2108",
+			event_id: post._id,
+		}).then(response => {
+			console.log(response);
+		});
+
+		axios.put(process.env.REACT_APP_SERVER_URL + "/addMyEvent", {
+			user_id: "62e2b8403fd0fc21fd2d2108",
+			event_id: post._id,
+		}).then(response => {
+			console.log(response);
+		});
+		console.log(post._id)
+	}
 
 	return (
-		<Card className="post-container" onMouseOver={MouseOver} onMouseOut={MouseOut}>
-			<Card.Img
-				variant="top"
-				src="https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,h_1200,q_75,w_1200/v1/clients/irving-redesign/Events_Page_Header_2903ed9c-40c1-4f6c-9a69-70bb8415295b.jpg"
-			/>
+		<Card
+			className="post-container"
+			onMouseOver={MouseOver}
+			onMouseOut={MouseOut}
+			imgsrc={post.picture}
+		>
+			<Card.Img className="post-img" variant="top" src={post.picture} />
 
 			<ListGroup horizontal className="post-details">
-				<li className="post-location">
-					1 Allen Ct. Plainsboro, NJ 08536
-				</li>
+				<li className="post-location">{post.location}</li>
 				<li className="post-date">
-					April 16th 2023 8:00PM
+					{getFormatedDateTime(post.datetime)}
 				</li>
 			</ListGroup>
 
 			<Card.Body className="post-body">
-				<Card.Title className="post-title">
-					Manan's 20th Birthday Party
-				</Card.Title>
-				<Collapse in={showDescription} >
+				<Card.Title className="post-title">{post.title}</Card.Title>
+				<Collapse in={showDescription}>
 					<Card.Text className="post-description">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Quibusdam voluptate adipisci maiores magni officia amet
-						labore odit commodi nostrum nihil ut ducimus dolore
-						quisquam, molestiae in, quos ipsam reprehenderit
-						pariatur!
+						{post.description}
 					</Card.Text>
 				</Collapse>
 			</Card.Body>
+			<div className="post-timestamp">
+				<p>{new Date(post.modified).toLocaleString("en-US", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+		hour: "numeric",
+		minute: "numeric",
+		hour12: true,
+	})}</p>
+				{post.modified !== post.created && <p>(updated)</p>}
+			</div>
 
-			<Button size="lg">
+			<Button size="lg" onClick={handleRSVP}>
 				RSVP <BsClipboardCheck />
 			</Button>
 		</Card>

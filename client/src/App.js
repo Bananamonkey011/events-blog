@@ -1,13 +1,21 @@
 import "./scss/styles.js";
+import { useState, useEffect } from "react";
+import Axios from "axios";
+import Button from "react-bootstrap/Button";
+
 import AllPosts from "./components/AllPosts.js";
 import MyEvents from "./components/MyEvents.js";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import MyEventsSideBar from "./components/MyEventsSideBar.js";
 import CreateEventsSideBar from "./components/CreateEventSidebar.js";
 import CreateEvent from "./components/CreateEvent.js";
 
 function App() {
+	useEffect(() => {
+		console.log(process.env.REACT_APP_SERVER_URL)
+		
+	}, []);
+
+
 	const [showMyEvents, setShowMyEvents] = useState(false);
 
 	const handleCloseMyEvents = () => setShowMyEvents(false);
@@ -53,7 +61,10 @@ function App() {
 				</div>
 
 				<AllPosts />
-        <CreateEvent showTitle/>
+
+				<div className="CreateEvent CreateEventSideBar">
+        			<CreateEvent showTitle/>
+				</div>
 			</div>
 		</div>
 	);
