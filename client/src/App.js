@@ -3,19 +3,13 @@ import { useState, useEffect } from "react";
 import Axios from "axios";
 import Button from "react-bootstrap/Button";
 
-import AllPosts from "./components/AllPosts.js";
-import MyEvents from "./components/MyEvents.js";
-import MyEventsSideBar from "./components/MyEventsSideBar.js";
-import CreateEventsSideBar from "./components/CreateEventSidebar.js";
-import CreateEvent from "./components/CreateEvent.js";
+import AllPosts from "./components/PostedEvents/AllPosts";
+import MyEvents from "./components/MyEvents/MyEvents";
+import MyEventsSideBar from "./components/MyEvents/MyEventsSideBar";
+import CreateEventsSideBar from "./components/CreateEvent/CreateEventSidebar";
+import CreateEvent from "./components/CreateEvent/CreateEvent";
 
 function App() {
-	useEffect(() => {
-		console.log(process.env.REACT_APP_SERVER_URL)
-		
-	}, []);
-
-
 	const [showMyEvents, setShowMyEvents] = useState(false);
 
 	const handleCloseMyEvents = () => setShowMyEvents(false);

@@ -6,6 +6,7 @@ import Collapse from "react-bootstrap/Collapse";
 import Fade from "react-bootstrap/Fade";
 import Button from "react-bootstrap/Button";
 import {BsClipboardX} from "react-icons/bs";
+import axios from "axios";
 
 const getFormatedDateTime = (ISO) => {
 	const date = new Date(ISO).toLocaleString("en-US", {
@@ -24,7 +25,7 @@ const getFormatedDateTime = (ISO) => {
 	return (<>{date} <br/> {day+", "+time}</>);
 }
 
-const MyEventItem = ({event}) => {
+const MyEventItem = ({uid, event, updateEvents}) => {
 	const [showDescription, setShowDescription] = useState(false);
 	const MouseOver = () => {
 		setShowDescription(true);
@@ -33,9 +34,11 @@ const MyEventItem = ({event}) => {
 		setShowDescription(false);
 	};
 
-	// if (event.picture === "") {
-	// 	event.picture = "https://coolbackgrounds.io/images/backgrounds/white/pure-white-background-85a2a7fd.jpg"
-	// }
+	const handleUnRSVP = (e) => {
+		axios.put(process.env.REACT_APP_SERVER_URL+"/unRSVP", {user_id: uid, event_id: event._id});
+		window.location.reload();
+	}
+	
 	return (
 		<div
 			className="my-event-item"
@@ -75,7 +78,7 @@ const MyEventItem = ({event}) => {
 								{event.description}
 							</Card.Text>
 						</Card.Body>
-					<Button>Un RSVP <BsClipboardX/></Button>
+					<Button onClick={handleUnRSVP}>Un RSVP <BsClipboardX/></Button>
 					</Card>
 				</Collapse>
 			{/* </Fade> */}

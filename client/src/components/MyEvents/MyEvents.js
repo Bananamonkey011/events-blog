@@ -5,12 +5,13 @@ import axios from "axios";
 
 const MyEvents = ({ showTitle }) => {
 	const [MyEvents, setMyEvents] = useState([]);
+	const userID = "62e2b8403fd0fc21fd2d2108"
 	const [loading, setLoading] = useState(true);
 	// let userid;
 
 	useEffect(() => {
 		axios
-			.get(process.env.REACT_APP_SERVER_URL + "/getMyEvents?id=" + "62e2b8403fd0fc21fd2d2108")
+			.get(process.env.REACT_APP_SERVER_URL + "/getMyEvents?id=" + userID)
 			.then((response) => {
 				// userid = response.data._id;
 				setMyEvents(response.data.events);
@@ -22,7 +23,7 @@ const MyEvents = ({ showTitle }) => {
 			{showTitle && <h1 className="my-events-title">My Events</h1>}
 			{/* {console.log(MyEvents)} */}
 			{MyEvents.map((event) => {
-				return <MyEventItem key={event._id} event={event}/>;
+				return <MyEventItem key={event._id} uid={userID} event={event} updateEvents={setMyEvents}/>;
 			})}
 		</div>
 	);

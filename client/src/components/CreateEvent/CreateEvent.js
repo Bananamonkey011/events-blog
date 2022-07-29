@@ -49,7 +49,7 @@ const CreateEvent = ({ showTitle }) => {
 	});
 
 	const handleSubmit = async (event) => {
-		event.preventDefault();
+		// event.preventDefault();
 		const dateinISO = new Date(formData.datetime).toISOString();
 		formData.datetime = dateinISO
 		formData.created = new Date().toISOString();

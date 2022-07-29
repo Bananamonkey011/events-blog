@@ -56,6 +56,10 @@ li {
 
 .post-details {
 	align-items: center;
+	display: inline-grid;
+	margin-inline: 5%;
+	margin-top: 2%;
+	grid-template-columns: 2fr 1fr;
 }
 
 .post-body {
@@ -64,7 +68,6 @@ li {
 }
 .post-location {
 	border: none;
-	width: 50%;
 	text-align: left;
 	background-color: none;
 	padding: 1%;
@@ -73,7 +76,6 @@ li {
 
 .post-date {
 	border: none;
-	width: 50%;
 	text-align: right;
 	background-color: none;
 	padding: 1%;
@@ -131,14 +133,14 @@ li {
 	transform: scale(1.03);
 	justify-self: center;
 	filter: brightness(70%) blur(2px);
-	max-height: 35vh;
+	max-height: 20vh;
 }
 .my-event-item-thumbnail-container {
 	display: grid;
 	grid-template-rows: 1fr 1fr;
 }
 .card-img[src=""] {
-	height: 50vh;
+	height: 20vh;
 	background-color: black;
 	opacity: 0;
 }
@@ -204,9 +206,29 @@ li {
 .create-event-form-entry::placeholder {
 	color: lightgray;
 }
+@media screen and (max-height: 1000px) {
+	.card-img[src=""] {
+		height: 30vh;
+	}
+	.my-event-item-img {
+		max-height: 30vh;
+	}
+}
 @media screen and (max-height: 700px) {
 	.post-img {
 		max-height: 45vh;
+	}
+}
+
+@media screen and (max-height: 700px) {
+	.post-img {
+		max-height: 70vh;
+	}
+	.card-img[src=""] {
+		height: 50vh;
+	}
+	.my-event-item-img {
+		max-height: 50vh;
 	}
 }
 @media screen and (min-width: 992px) {

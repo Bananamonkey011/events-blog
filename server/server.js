@@ -31,15 +31,18 @@ app.get("/getEvents", (req, res) => {
 });
 
 app.get("/getMyEvents?:id", (req, res) => {
-    // console.log(req.query.id);
-	Users.findById(req.query.id).populate("events").select("events").exec((err,result)=>{
-        res.set("Access-Control-Allow-Origin", "*");
-        if (err) {
-			res.json(err);
-		} else {
-			res.json(result);
-		}
-    });
+	// console.log(req.query.id);
+	Users.findById(req.query.id)
+		.populate("events")
+		.select("events")
+		.exec((err, result) => {
+			res.set("Access-Control-Allow-Origin", "*");
+			if (err) {
+				res.json(err);
+			} else {
+				res.json(result);
+			}
+		});
 });
 
 app.post("/createEvent", async (req, res) => {
@@ -49,32 +52,117 @@ app.post("/createEvent", async (req, res) => {
 	res.json(item);
 });
 
-app.put("/addAttendee", async (req, res) => {
-	let event = await Events.findOneAndUpdate(
-		{ _id: req.body.event_id, attendees: { $ne: req.body.user_id } },
-		{ $push: { attendees: req.body.user_id } },
+// app.put("/addAttendee", async (req, res) => {
+// 	let event = await Events.findOneAndUpdate(
+// 		{ _id: req.body.event_id, attendees: { $ne: req.body.user_id } },
+// 		{ $push: { attendees: req.body.user_id } },
+// 		(err, result) => {
+// 			if (err) {
+// 				res.json(err);
+// 			} else {
+// 				res.json(result);
+// 			}
+// 		}
+// 	)
+// 		.clone()
+// 		.catch(function (err) {
+// 			console.log(err);
+// 		});
+// });
+
+// app.put("/addMyEvent", async (req, res) => {
+// 	let user = await Users.findOneAndUpdate(
+// 		{ _id: req.body.user_id, events: { $ne: req.body.event_id } },
+// 		{ $push: { events: req.body.event_id } },
+// 		(err, result) => {
+// 			if (err) {
+// 				res.json(err);
+// 			} else {
+// 				res.json(result);
+// 			}
+// 		}
+// 	)
+// 		.clone()
+// 		.catch(function (err) {
+// 			console.log(err);
+// 		});
+// });
+
+app.put("/RSVP", async (req, res) => {
+    let modified = 0;
+	await Users.updateOne(
+		{ _id: req.body.user_id },
+		{ $addToSet: { events: req.body.event_id } },
 		(err, result) => {
 			if (err) {
-				res.json(err);
-			} else {
-				res.json(result);
+				console.log(err);
 			}
 		}
-	).clone().catch(function(err){ console.log(err)});
+	)
+		.clone()
+		.then((data) => {
+			console.log(data);
+            modified += data.modifiedCount;
+		})
+		.catch(function (err) {
+			console.log(err);
+		});
+
+	await Events.updateOne(
+		{ _id: req.body.event_id },
+		{ $addToSet: { attendees: req.body.user_id } },
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			}
+		}
+	)
+		.clone()
+		.then((data) => {
+			console.log(data);
+            modified += data.modifiedCount;
+		})
+		.catch(function (err) {
+			console.log(err);
+		});
+	console.log(modified);
+	res.json({modifiedCount: modified});
 });
 
-app.put("/addMyEvent", async (req, res) => {
-		let user = await Users.findOneAndUpdate(
-			{ _id: req.body.user_id, events: { $ne: req.body.event_id } },
-			{ $push: { events: req.body.event_id } },
-			(err, result) => {
-				if (err) {
-					res.json(err);
-				} else {
-					res.json(result);
-				}
+app.put("/unRSVP", (req, res) => {
+	// console.log(req.body.event_id);
+	// console.log(req.body.user_id);
+	Users.updateOne(
+		{ _id: req.body.user_id },
+		{ $pull: { events: req.body.event_id } },
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(result);
 			}
-		).clone().catch(function(err){ console.log(err)});
+		}
+	)
+		.clone()
+		.catch(function (err) {
+			console.log(err);
+		});
+
+	Events.updateOne(
+		{ _id: req.body.event_id },
+		{ $pull: { attendees: req.body.user_id } },
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(result);
+			}
+		}
+	)
+		.clone()
+		.catch(function (err) {
+			console.log(err);
+		});
 });
 
 app.listen(3001, () => {

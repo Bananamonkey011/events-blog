@@ -39,20 +39,25 @@ const Post = ({ post }) => {
 	};
 
 	const handleRSVP = () => {
-		axios.put(process.env.REACT_APP_SERVER_URL + "/addAttendee", {
+		axios.put(process.env.REACT_APP_SERVER_URL + "/RSVP", {
 			user_id: "62e2b8403fd0fc21fd2d2108",
 			event_id: post._id,
 		}).then(response => {
-			console.log(response);
+			// console.log(response.data);
+			// console.log(post._id)
+			if (response.data.modifiedCount > 0) {
+				window.location.reload();
+			}
 		});
 
-		axios.put(process.env.REACT_APP_SERVER_URL + "/addMyEvent", {
-			user_id: "62e2b8403fd0fc21fd2d2108",
-			event_id: post._id,
-		}).then(response => {
-			console.log(response);
-		});
-		console.log(post._id)
+		// axios.put(process.env.REACT_APP_SERVER_URL + "/addMyEvent", {
+		// 	user_id: "62e2b8403fd0fc21fd2d2108",
+		// 	event_id: post._id,
+		// }).then(response => {
+		// 	console.log(response);
+		// });
+
+
 	}
 
 	return (
@@ -64,12 +69,12 @@ const Post = ({ post }) => {
 		>
 			<Card.Img className="post-img" variant="top" src={post.picture} />
 
-			<ListGroup horizontal className="post-details">
+			<div className="post-details">
 				<li className="post-location">{post.location}</li>
 				<li className="post-date">
 					{getFormatedDateTime(post.datetime)}
 				</li>
-			</ListGroup>
+			</div>
 
 			<Card.Body className="post-body">
 				<Card.Title className="post-title">{post.title}</Card.Title>
