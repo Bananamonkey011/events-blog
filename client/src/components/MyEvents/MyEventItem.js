@@ -34,9 +34,9 @@ const MyEventItem = ({uid, event, updateEvents}) => {
 		setShowDescription(false);
 	};
 
-	const handleUnRSVP = (e) => {
-		axios.put(process.env.REACT_APP_SERVER_URL+"/unRSVP", {user_id: uid, event_id: event._id});
-		window.location.reload();
+	const handleUnRSVP = async () => {
+		await axios.put(process.env.REACT_APP_SERVER_URL+"/unRSVP", {user_id: uid, event_id: event._id}).then(()=>{window.location.reload()});
+		
 	}
 	
 	return (

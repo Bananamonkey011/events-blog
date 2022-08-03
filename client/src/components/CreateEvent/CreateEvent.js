@@ -5,11 +5,14 @@ import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 import { FaPaperPlane } from "react-icons/fa";
 
+import { writeFile } from 'fs-web';
+const ics = require("ics");
+
 const getDateString = (CurDateTime) => {
 	const month =
 		CurDateTime.getMonth() < 10
-			? "0" + CurDateTime.getMonth()
-			: CurDateTime.getMonth();
+			? "0" + (CurDateTime.getMonth()+1)
+			: (CurDateTime.getMonth()+1);
 	const date =
 		CurDateTime.getDate() < 10
 			? "0" + CurDateTime.getDate()
@@ -49,14 +52,15 @@ const CreateEvent = ({ showTitle }) => {
 	});
 
 	const handleSubmit = async (event) => {
-		// event.preventDefault();
+		event.preventDefault();
 		const dateinISO = new Date(formData.datetime).toISOString();
-		formData.datetime = dateinISO
+		formData.datetime = dateinISO;
 		formData.created = new Date().toISOString();
 		formData.modified = new Date().toISOString();
 		console.log(formData);
-		axios.post(process.env.REACT_APP_SERVER_URL + "/createEvent", formData);
-
+		axios
+			.post(process.env.REACT_APP_SERVER_URL + "/createEvent", formData).then((error, response) => {console.log(response);});
+			
 		setFormData({
 			title: "",
 			location: "",

@@ -38,26 +38,22 @@ const Post = ({ post }) => {
 		setShowDescription(false);
 	};
 
-	const handleRSVP = () => {
-		axios.put(process.env.REACT_APP_SERVER_URL + "/RSVP", {
+	const handleRSVP = async () => {
+		await axios.put(process.env.REACT_APP_SERVER_URL + "/RSVP", {
 			user_id: "62e2b8403fd0fc21fd2d2108",
 			event_id: post._id,
-		}).then(response => {
+		})
+		.then(response => {
 			// console.log(response.data);
 			// console.log(post._id)
 			if (response.data.modifiedCount > 0) {
-				window.location.reload();
+				// window.location.reload();
+				console.log("reload")
 			}
-		});
-
-		// axios.put(process.env.REACT_APP_SERVER_URL + "/addMyEvent", {
-		// 	user_id: "62e2b8403fd0fc21fd2d2108",
-		// 	event_id: post._id,
-		// }).then(response => {
-		// 	console.log(response);
-		// });
-
-
+		})
+		.then(
+			window.open(process.env.REACT_APP_SERVER_URL + "/download-ics-event?eid=" + post._id)
+		);
 	}
 
 	return (

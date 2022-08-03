@@ -8,6 +8,26 @@ p {
 li {
 	list-style: none;
 }
+label {
+	font-size: large;
+	font-weight: bold;
+	margin: 0 auto;
+}
+
+textarea, input {
+	width: 90%;
+	background-color: rgb(255, 255, 255, 0.25);
+	padding: 5px;
+	padding-inline: 20px;
+	border: none;
+	border-radius: 0.25vw 2.5vw / 0.25vw 2.5vw;
+	border-bottom: 1px solid black;
+}
+
+textarea::placeholder, input::placeholder {
+	color: lightgray;
+}
+
 .page {
 	background-color: darkslategray;
 }
@@ -188,24 +208,33 @@ li {
 	padding: 10px;
 	text-align: center;
 }
-.create-event-form-label {
-	font-size: large;
-	font-weight: bold;
-	margin: 0 auto;
+
+
+
+
+// SignIn
+.SignIn{
+	
+
+}
+.signin-title {
+}
+.signin-form-container {
+	display: inline-block;
+	width: 80%;
+	max-width: 700px;
+}
+.signin-group {
+	display: grid;
+	grid-template-columns: 1fr 4fr;
+	margin: 25px;
+}
+.btn-sign-in {
+	background-color: lightblue;
 }
 
-.create-event-form-entry {
-	width: 90%;
-	background-color: rgb(255, 255, 255, 0.25);
-	padding: 5px;
-	padding-inline: 20px;
-	border: none;
-	border-radius: 0.25vw 2.5vw / 0.25vw 2.5vw;
-	border-bottom: 1px solid black;
-}
-.create-event-form-entry::placeholder {
-	color: lightgray;
-}
+
+
 @media screen and (max-height: 1000px) {
 	.card-img[src=""] {
 		height: 30vh;
