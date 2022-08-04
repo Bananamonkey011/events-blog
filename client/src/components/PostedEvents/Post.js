@@ -7,11 +7,11 @@ import { BsClipboardCheck } from "react-icons/bs";
 import { useState } from "react";
 import axios from "axios";
 
-// Img Src
-// Location
-// Date
-// Title
-// Description
+/**
+ * @brief Nicely formatted React component of Date given ISO 8601 date
+ * @param {String} ISO ISO format of date
+ * @returns {React.Component} Date formatted visually
+ */
 const getFormatedDateTime = (ISO) => {
 	const date = new Date(ISO).toLocaleString("en-US", {
 		day: "2-digit",
@@ -26,8 +26,12 @@ const getFormatedDateTime = (ISO) => {
 		minute: "numeric",
 		hour12: true,
 	});
-	return (<>{date} <br/> {day+", "+time}</>);
-}
+	return (
+		<>
+			{date} <br /> {day + ", " + time}
+		</>
+	);
+};
 
 const Post = ({ post }) => {
 	const [showDescription, setShowDescription] = useState(false);
@@ -39,22 +43,27 @@ const Post = ({ post }) => {
 	};
 
 	const handleRSVP = async () => {
-		await axios.put(process.env.REACT_APP_SERVER_URL + "/RSVP", {
-			user_id: "62e2b8403fd0fc21fd2d2108",
-			event_id: post._id,
-		})
-		.then(response => {
-			// console.log(response.data);
-			// console.log(post._id)
-			if (response.data.modifiedCount > 0) {
-				// window.location.reload();
-				console.log("reload")
-			}
-		})
-		.then(
-			window.open(process.env.REACT_APP_SERVER_URL + "/download-ics-event?eid=" + post._id)
-		);
-	}
+		await axios
+			.put(process.env.REACT_APP_SERVER_URL + "/RSVP", {
+				user_id: "62e2b8403fd0fc21fd2d2108",
+				event_id: post._id,
+			})
+			.then((response) => {
+				// console.log(response.data);
+				// console.log(post._id)
+				if (response.data.modifiedCount > 0) {
+					// window.location.reload();
+					console.log("reload");
+				}
+			})
+			.then(
+				window.open(
+					process.env.REACT_APP_SERVER_URL +
+						"/download-ics-event?eid=" +
+						post._id
+				)
+			);
+	};
 
 	return (
 		<Card
@@ -81,14 +90,16 @@ const Post = ({ post }) => {
 				</Collapse>
 			</Card.Body>
 			<div className="post-timestamp">
-				<p>{new Date(post.modified).toLocaleString("en-US", {
-		day: "2-digit",
-		month: "short",
-		year: "numeric",
-		hour: "numeric",
-		minute: "numeric",
-		hour12: true,
-	})}</p>
+				<p>
+					{new Date(post.modified).toLocaleString("en-US", {
+						day: "2-digit",
+						month: "short",
+						year: "numeric",
+						hour: "numeric",
+						minute: "numeric",
+						hour12: true,
+					})}
+				</p>
 				{post.modified !== post.created && <p>(updated)</p>}
 			</div>
 

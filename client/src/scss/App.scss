@@ -16,12 +16,15 @@ label {
 
 textarea, input {
 	width: 90%;
+	height: fit-content;
 	background-color: rgb(255, 255, 255, 0.25);
 	padding: 5px;
 	padding-inline: 20px;
 	border: none;
 	border-radius: 0.25vw 2.5vw / 0.25vw 2.5vw;
 	border-bottom: 1px solid black;
+	align-self: center;
+	justify-self: center;
 }
 
 textarea::placeholder, input::placeholder {
@@ -38,6 +41,12 @@ textarea::placeholder, input::placeholder {
 .body {
 	display: grid;
 	grid-template-columns: 1fr;
+}
+
+.errmsg {
+	color: red;
+	grid-column-start: 1;
+	grid-column-end: end;
 }
 
 .btn {
@@ -219,17 +228,17 @@ textarea::placeholder, input::placeholder {
 }
 .signin-title {
 }
-.signin-form-container {
+.signin-form-container, .signup-form-container {
 	display: inline-block;
 	width: 80%;
 	max-width: 700px;
 }
-.signin-group {
+.signin-group, .signup-group {
 	display: grid;
 	grid-template-columns: 1fr 4fr;
 	margin: 25px;
 }
-.btn-sign-in {
+.btn-sign-up, .btn-sign-in {
 	background-color: lightblue;
 }
 
