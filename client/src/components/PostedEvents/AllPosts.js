@@ -4,7 +4,7 @@ import axios from "axios";
 import Post from "./Post";
 import Spinner from 'react-bootstrap/Spinner';
 
-const AllPosts = () => {
+const AllPosts = ({userID}) => {
 	const [posts, setPosts] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -20,8 +20,8 @@ const AllPosts = () => {
 	return (
 		<div className="Posts">
 			{loading && <Spinner animation="border" />}
-			{posts.map((post) => {
-				return <Post key={post._id} post={post} />;
+			{posts?.map((post) => {
+				return <Post key={post._id} post={post} userID={userID}/>;
 			}, [])}
 		</div>
 	);

@@ -1,10 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import {BiArrowBack} from "react-icons/bi"
+
 
 const SignUp = () => {
-	const emailRegex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-	
+	const emailRegex = new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/);
+
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -25,7 +27,10 @@ const SignUp = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (emailRegex.test(formData.email) && formData.password === formData.confirmPassword) {
+		if (
+			emailRegex.test(formData.email) &&
+			formData.password === formData.confirmPassword
+		) {
 			setpasswordMatch(true);
 			console.log(formData);
 			axios
@@ -50,7 +55,7 @@ const SignUp = () => {
 					});
 					setpasswordMatch(true);
 					setTakenEmail(false);
-					setTakenUserName(false)
+					setTakenUserName(false);
 					e.target.reset();
 				})
 				.catch((error) => {
@@ -65,62 +70,88 @@ const SignUp = () => {
 		}
 	};
 
+
+	const returnToDashboard = () => {
+		// console.log("back");
+		window.location = "/";
+	};
+
 	return (
 		<div className="SignUp">
-			<div className="signup-form-container">
-				<form className="signup-form" onSubmit={handleSubmit}>
-					<div className="form-group signup-group">
-						<label htmlFor="email">Email: </label>
-						<input
-							id="email"
-							type="text"
-							placeholder="Enter Email"
-							onChange={handleChange}
-							required
-						/>
-						{!validEmail && <p className="errmsg">Invalid Email</p>}
-						{takenEmail && <p className="errmsg">Email taken</p>}
-					</div>
+			<button className="return-to-dashboard" onClick={returnToDashboard}>
+				<BiArrowBack/>
+			</button>
 
-					<div className="form-group signup-group">
-						<label htmlFor="username">Username: </label>
-						<input
-							id="username"
-							type="text"
-							placeholder="Enter Username"
-							onChange={handleChange}
-							required
-						/>
-						{takenUsername && <p className="errmsg">Username taken</p>}
-					</div>
-					<div className="form-group signup-group">
-						<label htmlFor="password">Password: </label>
-						<input
-							id="password"
-							type="password"
-							placeholder="Enter Password"
-							onChange={handleChange}
-							required
-						/>
-					</div>
-					<div className="form-group signup-group">
-						<label htmlFor="confirmPassword">
-							Confirm password:{" "}
-						</label>
-						<input
-							id="confirmPassword"
-							type="password"
-							placeholder="Confirm password"
-							onChange={handleChange}
-							required
-						/>
-						{!passwordMatch && <p className="errmsg">Passwords Do Not Match</p>}
-					</div>
+				<h1 className="signin-title">Sign Up</h1>
+	
+			<div className="signup-form-container-bg">
+				<div className="signup-form-container-border">
 
-					<button type="submit" className="btn btn-sign-up">
-						Sign Up
-					</button>
-				</form>
+						<form className="signup-form" onSubmit={handleSubmit}>
+							<div className="form-group signup-group">
+								<label htmlFor="email">Email: </label>
+								<input
+									id="email"
+									type="text"
+									placeholder="Enter Email"
+									onChange={handleChange}
+									required
+								/>
+								{!validEmail && (
+									<p className="errmsg">Invalid Email</p>
+								)}
+								{takenEmail && (
+									<p className="errmsg">Email taken</p>
+								)}
+							</div>
+
+							<div className="form-group signup-group">
+								<label htmlFor="username">Username: </label>
+								<input
+									id="username"
+									type="text"
+									placeholder="Enter Username"
+									onChange={handleChange}
+									required
+								/>
+								{takenUsername && (
+									<p className="errmsg">Username taken</p>
+								)}
+							</div>
+							<div className="form-group signup-group">
+								<label htmlFor="password">Password: </label>
+								<input
+									id="password"
+									type="password"
+									placeholder="Enter Password"
+									onChange={handleChange}
+									required
+								/>
+							</div>
+							<div className="form-group signup-group">
+								<label htmlFor="confirmPassword">
+									Confirm password:{" "}
+								</label>
+								<input
+									id="confirmPassword"
+									type="password"
+									placeholder="Confirm password"
+									onChange={handleChange}
+									required
+								/>
+								{!passwordMatch && (
+									<p className="errmsg">
+										Passwords Do Not Match
+									</p>
+								)}
+							</div>
+
+							<button type="submit" className="btn btn-sign-up">
+								Sign Up
+							</button>
+						</form>
+
+				</div>
 			</div>
 		</div>
 	);

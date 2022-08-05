@@ -1,11 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 import Collapse from "react-bootstrap/Collapse";
-import Fade from "react-bootstrap/Fade";
 import Button from "react-bootstrap/Button";
-import {BsClipboardX} from "react-icons/bs";
+import { BsClipboardX } from "react-icons/bs";
 import axios from "axios";
 
 const getFormatedDateTime = (ISO) => {
@@ -22,10 +20,26 @@ const getFormatedDateTime = (ISO) => {
 		minute: "numeric",
 		hour12: true,
 	});
-	return (<>{date} <br/> {day+", "+time}</>);
-}
+	return (
+		<>
+			{date} <br /> {day + ", " + time}
+		</>
+	);
+};
 
-const MyEventItem = ({uid, event, updateEvents}) => {
+const arrayBufferToBase64 = (buffer) => {
+	var binary = "";
+	var bytes = [].slice.call(new Uint8Array(buffer));
+	bytes.forEach((b) => (binary += String.fromCharCode(b)));
+	// console.log(window.btoa(binary));
+	if (window.btoa(binary).length > 0) {
+		return window.btoa(binary);
+	} else {
+		return "";
+	}
+};
+
+const MyEventItem = ({ uid, event, updateEvents }) => {
 	const [showDescription, setShowDescription] = useState(false);
 	const MouseOver = () => {
 		setShowDescription(true);
@@ -35,10 +49,16 @@ const MyEventItem = ({uid, event, updateEvents}) => {
 	};
 
 	const handleUnRSVP = async () => {
-		await axios.put(process.env.REACT_APP_SERVER_URL+"/unRSVP", {user_id: uid, event_id: event._id}).then(()=>{window.location.reload()});
-		
-	}
-	
+		await axios
+			.put(process.env.REACT_APP_SERVER_URL + "/unRSVP", {
+				user_id: uid,
+				event_id: event._id,
+			})
+			.then(() => {
+				// window.location.reload();
+			});
+	};
+
 	return (
 		<div
 			className="my-event-item"
@@ -52,7 +72,12 @@ const MyEventItem = ({uid, event, updateEvents}) => {
 			>
 				<Card.Img
 					className="my-event-item-img"
-					src={event.picture}
+					src={
+						arrayBufferToBase64(event.picture.data.data) === ""
+							? ""
+							: "data:image/jpeg;base64," +
+							  arrayBufferToBase64(event.picture.data.data)
+					}
 				/>
 
 				<Card.ImgOverlay className="my-event-item-thumbnail-container">
@@ -60,27 +85,31 @@ const MyEventItem = ({uid, event, updateEvents}) => {
 						{event.title}
 					</Card.Header>
 					<div className="my-event-item-details">
-						<div className="my-event-item-location">{event.location}</div>
-						<div className="my-event-item-date">{getFormatedDateTime(event.datetime)}</div>
+						<div className="my-event-item-location">
+							{event.location}
+						</div>
+						<div className="my-event-item-date">
+							{getFormatedDateTime(event.datetime)}
+						</div>
 					</div>
 				</Card.ImgOverlay>
 			</Card>
 
 			{/* <Fade> */}
-				<Collapse
-					in={showDescription}
-					className="my-event-item-description"
-					timeout={500}
-				>
-					<Card>
-						<Card.Body>
-							<Card.Text>
-								{event.description}
-							</Card.Text>
-						</Card.Body>
-					<Button onClick={handleUnRSVP}>Un RSVP <BsClipboardX/></Button>
-					</Card>
-				</Collapse>
+			<Collapse
+				in={showDescription}
+				className="my-event-item-description"
+				timeout={500}
+			>
+				<Card>
+					<Card.Body>
+						<Card.Text>{event.description}</Card.Text>
+					</Card.Body>
+					<Button onClick={handleUnRSVP}>
+						Un RSVP <BsClipboardX />
+					</Button>
+				</Card>
+			</Collapse>
 			{/* </Fade> */}
 		</div>
 	);

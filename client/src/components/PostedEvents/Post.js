@@ -1,9 +1,9 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { BsClipboardCheck } from "react-icons/bs";
+import { MdDeleteForever } from "react-icons/md";
 import { useState } from "react";
 import axios from "axios";
 
@@ -32,8 +32,18 @@ const getFormatedDateTime = (ISO) => {
 		</>
 	);
 };
-
-const Post = ({ post }) => {
+const arrayBufferToBase64 = (buffer) => {
+    var binary = '';
+    var bytes = [].slice.call(new Uint8Array(buffer));
+    bytes.forEach((b) => binary += String.fromCharCode(b));
+	// console.log(window.btoa(binary));
+	if (window.btoa(binary).length > 0) {
+    	return window.btoa(binary);
+	} else {
+		return "";
+	}
+};
+const Post = ({ post, userID }) => {
 	const [showDescription, setShowDescription] = useState(false);
 	const MouseOver = () => {
 		setShowDescription(true);
@@ -42,10 +52,16 @@ const Post = ({ post }) => {
 		setShowDescription(false);
 	};
 
+	const handleDelete = async (event) => {
+		await axios.delete(process.env.REACT_APP_SERVER_URL + "/deleteEvent", {data: post}).then(
+			window.location.reload()
+		);
+	};
+
 	const handleRSVP = async () => {
 		await axios
 			.put(process.env.REACT_APP_SERVER_URL + "/RSVP", {
-				user_id: "62e2b8403fd0fc21fd2d2108",
+				user_id: userID,
 				event_id: post._id,
 			})
 			.then((response) => {
@@ -55,14 +71,14 @@ const Post = ({ post }) => {
 					// window.location.reload();
 					console.log("reload");
 				}
-			})
-			.then(
-				window.open(
-					process.env.REACT_APP_SERVER_URL +
-						"/download-ics-event?eid=" +
-						post._id
-				)
-			);
+			});
+		// .then(
+		// 	window.open(
+		// 		process.env.REACT_APP_SERVER_URL +
+		// 			"/download-ics-event?eid=" +
+		// 			post._id
+		// 	)
+		// );
 	};
 
 	return (
@@ -72,7 +88,7 @@ const Post = ({ post }) => {
 			onMouseOut={MouseOut}
 			imgsrc={post.picture}
 		>
-			<Card.Img className="post-img" variant="top" src={post.picture} />
+			<Card.Img className="post-img" variant="top" src={arrayBufferToBase64(post.picture.data.data) === ""? "":'data:image/jpeg;base64,'+arrayBufferToBase64(post.picture.data.data)} />
 
 			<div className="post-details">
 				<li className="post-location">{post.location}</li>
@@ -102,10 +118,16 @@ const Post = ({ post }) => {
 				</p>
 				{post.modified !== post.created && <p>(updated)</p>}
 			</div>
-
-			<Button size="lg" onClick={handleRSVP}>
-				RSVP <BsClipboardCheck />
-			</Button>
+			<div className="post-btn-container">
+				<button className="btn" onClick={handleRSVP}>
+					RSVP <BsClipboardCheck />
+				</button>
+				{post.createdBy === userID && (
+					<button className="btn btn-delete" onClick={handleDelete}>
+						<MdDeleteForever />
+					</button>
+				)}
+			</div>
 		</Card>
 	);
 };

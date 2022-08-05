@@ -14,7 +14,7 @@ const MyEventsSideBar = ({...props}) => {
 				<Offcanvas.Title>My Events</Offcanvas.Title>
 			</Offcanvas.Header>
 			<Offcanvas.Body>
-				<MyEvents />
+				<MyEvents userID={props.userID} />
 			</Offcanvas.Body>
 		</Offcanvas>
 	);

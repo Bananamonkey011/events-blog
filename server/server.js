@@ -4,9 +4,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
 const bodyParser = require("body-parser");
+var fs = require("fs");
+var path = require("path");
 const { writeFileSync } = require("fs");
 const ics = require("ics");
 const bcrypt = require("bcrypt");
+const { promisify } = require('util')
 
 app.use(express.static("public"));
 app.use(cors());
@@ -23,6 +26,26 @@ mongoose.connect(
 );
 
 /**
+ * Setting up MULTER
+ */
+var storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		var dirName = path.join(process.cwd(), "./uploads/");
+		console.log(dirName);
+		if (!fs.existsSync(dirName)) {
+			fs.mkdirSync(dirName);
+		}
+		cb(null, dirName);
+	},
+	filename: function (req, file, cb) {
+		cb(null, Date.now() + "-" + file.originalname);
+	},
+});
+var upload = multer({ storage: storage });
+
+const unlinkAsync = promisify(fs.unlink);
+
+/**
  * @brief test event
  */
 app.get("/", (req, res) => {
@@ -33,6 +56,7 @@ app.get("/", (req, res) => {
  * @brief gets all events from database
  */
 app.get("/getEvents", (req, res) => {
+	console.log("getEvents");
 	Events.find({}, (err, result) => {
 		if (err) {
 			res.json(err);
@@ -47,6 +71,7 @@ app.get("/getEvents", (req, res) => {
  * @query ObjectId associated with user
  */
 app.get("/getMyEvents?:id", (req, res) => {
+	console.log("getMyEvents");
 	// console.log(req.query.id);
 	Users.findById(req.query.id)
 		.populate("events")
@@ -62,26 +87,11 @@ app.get("/getMyEvents?:id", (req, res) => {
 });
 
 /**
- * doesn't work
- */
-app.get("/sign-in?:email?:password", (req, res) => {
-	console.log(req.query.email, req.query.password);
-	// User.findOne({email: req.query.email, password: req.query.password}).populate("events")
-	// .exec((err, result) => {
-	//     res.set("Access-Control-Allow-Origin", "*");
-	//     if (err) {
-	//         res.json(err);
-	//     } else {
-	//         res.json(result);
-	//     }
-	// });
-});
-
-/**
  * @brief returns the .ics file for a given event
  * @query the ObjectId of the event
  */
 app.get("/download-ics-event?:eid", (req, res) => {
+	console.log("downlaod ics");
 	console.log(req.query.eid);
 	Events.findById(req.query.eid, (err, data) => {
 		if (err) {
@@ -130,15 +140,56 @@ app.get("/download-ics-event?:eid", (req, res) => {
 });
 
 /**
+ * @brief signs in user and returns their profile
+ * @body username/email and password combination
+ */
+app.post("/sign-in", async (req, res) => {
+	console.log("signin");
+	console.log(req.body.email, req.body.password);
+	const account = await Users.findOne({
+		$or: [{ email: req.body.email }, { username: req.body.email }],
+	}).lean();
+	console.log(req.body.password, account.password);
+	if (!account) {
+		res.status(404).send({ message: "Account Not Found" });
+	} else if (!bcrypt.compareSync(req.body.password, account.password)) {
+		res.status(400).send({ message: "Invalid Username Or Password" });
+	} else {
+		res.status(200).send(account);
+	}
+	// User.findOne({email: req.query.email, password: req.query.password}).populate("events")
+	// .exec((err, result) => {
+	//     res.set("Access-Control-Allow-Origin", "*");
+	//     if (err) {
+	//         res.json(err);
+	//     } else {
+	//         res.json(result);
+	//     }
+	// });
+});
+
+/**
  * @brief Create a new event
  * @body event details
  */
-app.post("/createEvent", async (req, res) => {
-	const item = req.body;
+app.post("/createEvent", upload.single("picture"), async (req, res) => {
+	console.log("createEvent");
+	// console.log(req.file);
+	// console.log(req.body);
+
+	const item = JSON.parse(req.body.state);
+	// console.log(item);
+	item.picture = {
+		data: fs.readFileSync(
+			path.join(__dirname + "/uploads/" + req.file.filename)
+		),
+		contentType: "image/png",
+	};
+	// console.log(item);
 	const newItem = new Events(item);
 	await newItem.save();
-
-	res.json(item);
+	await unlinkAsync(req.file.path);
+	// res.json(item);
 });
 
 /**
@@ -146,8 +197,9 @@ app.post("/createEvent", async (req, res) => {
  * @body New User Details: email, username, password
  */
 app.post("/registerUser", async (req, res) => {
+	console.log("registerUser");
 	const user = req.body;
-	const orgPw = req.body.password
+	const orgPw = req.body.password;
 
 	const takenEmail = await Users.findOne({ email: user.email.toLowerCase() });
 	const takenUsername = await Users.findOne({ username: user.username });
@@ -164,7 +216,7 @@ app.post("/registerUser", async (req, res) => {
 		// console.log(bcrypt.compareSync("pass", "$2b$10$2GjXXg0uYM.KpJ7ReGYNceJIdaxBjZLLKvL1xlXizahYBAEiQRUKi"));
 		// console.log(bcrypt.compareSync("Pass", "$2b$10$2GjXXg0uYM.KpJ7ReGYNceJIdaxBjZLLKvL1xlXizahYBAEiQRUKi"));
 		// console.log(bcrypt.compareSync("Passw", "$2b$10$2GjXXg0uYM.KpJ7ReGYNceJIdaxBjZLLKvL1xlXizahYBAEiQRUKi"));
-		
+
 		const newUser = new Users({
 			email: user.email.toLowerCase(),
 			username: user.username,
@@ -181,6 +233,7 @@ app.post("/registerUser", async (req, res) => {
  * @body the ObjectIds associated with the event being RSVP'd to and the user RSVP'ing
  */
 app.put("/RSVP", (req, res) => {
+	console.log("rsvp");
 	let modified = 0;
 	// console.log(Users.exists({_id: req.body.user_id, events: req.body.event_id}));
 	Users.updateOne(
@@ -261,6 +314,17 @@ app.put("/unRSVP", (req, res) => {
 		.catch(function (err) {
 			console.log(err);
 		});
+});
+
+app.delete("/deleteEvent", async (req, res) => {
+	console.log("deleteEvent");
+	await Events.deleteOne({ _id: req.body._id }, (err, result) => {
+		if (err) {
+			res.json(err);
+		} else {
+			res.json(result);
+		}
+	}).clone();
 });
 
 app.listen(process.env.PORT || 3001, () => {

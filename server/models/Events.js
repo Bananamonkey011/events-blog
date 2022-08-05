@@ -8,7 +8,11 @@ const EventsSchema = new Schema({
 	created: Date,
 	modified: Date,
 	description: String,
-	picture: String,
+	picture: {
+        data: Buffer,
+        contentType: String
+    },
+	createdBy: {type: Schema.Types.ObjectId, ref: "Users"},
 	attendees: [
 		{
 			type: Schema.Types.ObjectId,

@@ -15,7 +15,7 @@ const CreateEventSidebar = ({ ...props }) => {
 				<Offcanvas.Title>Create Event</Offcanvas.Title>
 			</Offcanvas.Header>
 			<Offcanvas.Body>
-				<CreateEvent showTitle={!props.show}/>
+				<CreateEvent showTitle={!props.show} userID={props.userID}/>
 			</Offcanvas.Body>
 		</Offcanvas>
 	);

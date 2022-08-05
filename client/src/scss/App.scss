@@ -2,6 +2,10 @@
 * {
 	margin: 0;
 }
+h1 {
+	margin: 0
+}
+
 p {
 	margin: 0;
 }
@@ -12,6 +16,7 @@ label {
 	font-size: large;
 	font-weight: bold;
 	margin: 0 auto;
+	color: white;
 }
 
 textarea, input {
@@ -48,16 +53,91 @@ textarea::placeholder, input::placeholder {
 	grid-column-start: 1;
 	grid-column-end: end;
 }
+.infomsg {
+	color: aquamarine;
+	grid-column-start: 1;
+	grid-column-end: end;
+}
 
+.return-to-dashboard {
+	position: absolute;
+	top: 2%;
+	left: 5%;
+	background: none ;
+	border: none;
+	font-size: 300%;
+}
 .btn {
 	margin: 10px;
 	align-self: center;
 	width: 150px;
+	border: none;
+	background-color: aquamarine;
 	border-radius: 0px 20px / 0px 20px;
+	color:black
 }
 
-// Posts
+.btn:disabled {
+	background-color: darken(aquamarine, .5);
+	color: black;
+}
 
+.btn-delete {
+	width: fit-content;
+}
+
+.offcanvas-title {
+	color: white;
+}
+
+
+.btn:focus {
+	outline: none;
+	box-shadow: none;
+	background-color: white;
+	border: 5px white transparent
+}
+.btn:hover{
+	background-color: white;
+	border: 5px white transparent
+}
+
+.btn-reverse {
+	margin: 10px;
+	align-self: center;
+	width: 150px;
+	border-radius: 20px 0px / 20px 00px;
+}
+//Landing Page
+
+.landing-heading-border {
+	// height: 15vh;
+	background: aquamarine;
+} 
+.landing-heading-container-bg {
+	background-color: aquamarine;
+}
+.landing-heading-container {
+	padding: 15vh;
+	// padding-bottom: 1vh;
+	background: aquamarine;
+	border-bottom-left-radius: 45% 70%;
+}
+.landing-btn-container {
+	display: flex;
+	width: 100vw;
+	height: 60vh;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+	background-color: darkslategray;
+	border-top-right-radius: 45% 60%;
+}
+
+.btn-login, .btn-register {
+	width: 30%;
+	min-width: 150px;
+}
+// Posts
 .Posts {
 	padding-inline: 5%;
 }
@@ -71,6 +151,14 @@ textarea::placeholder, input::placeholder {
 	background-color: rgb(255, 255, 255, 0.5);
 }
 
+.dashboard-header{
+	color:white;
+}
+
+.post-btn-container {
+	display: flex;
+	justify-content: space-evenly;
+}
 // .post-img[src=""]:empty +
 .post-img{
 	max-height: 35vh;
@@ -132,6 +220,7 @@ textarea::placeholder, input::placeholder {
 	background-color: darkslategray;
 }
 .my-events-title {
+	color: white;
 	display: none;
 }
 .my-event-item {
@@ -147,11 +236,7 @@ textarea::placeholder, input::placeholder {
 	transition: 0.5s;
 	// background-color: rgb(0, 0, 0, 0.5);
 	// background: rgb(4, 11, 153, 0);
-	background: linear-gradient(
-		to bottom right,
-		rgba(4, 11, 153, 0.5) 0%,
-		rgba(0, 255, 186, 0.25) 100%
-	);
+	background: rgb(255, 255, 255,.2)
 }
 .my-event-item:hover {
 	.my-event-item-thumbnail {
@@ -173,6 +258,7 @@ textarea::placeholder, input::placeholder {
 	background-color: black;
 	opacity: 0;
 }
+
 .my-event-item-title {
 	font-size: 1.5rem;
 	align-self: center;
@@ -208,6 +294,7 @@ textarea::placeholder, input::placeholder {
 	justify-content: center;
 }
 .create-event-title {
+	color:white;
 	display: none;
 }
 .create-event-form {
@@ -226,9 +313,22 @@ textarea::placeholder, input::placeholder {
 	
 
 }
-.signin-title {
+.signin-title, .signup-title {
+	background-color: aquamarine;
+	padding: 10vh;
+	border-bottom-left-radius: 45% 70%;
+
 }
-.signin-form-container, .signup-form-container {
+
+.signup-form-container-bg, .signin-form-container-bg {
+	background-color: aquamarine;
+}
+.signin-form-container-border, .signup-form-container-border {
+	background-color: darkslategray;
+	padding-top: 10vh;
+	border-top-right-radius: 45% 30vh;
+}
+.signin-form, .signup-form {
 	display: inline-block;
 	width: 80%;
 	max-width: 700px;
@@ -237,9 +337,6 @@ textarea::placeholder, input::placeholder {
 	display: grid;
 	grid-template-columns: 1fr 4fr;
 	margin: 25px;
-}
-.btn-sign-up, .btn-sign-in {
-	background-color: lightblue;
 }
 
 

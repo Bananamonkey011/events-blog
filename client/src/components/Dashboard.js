@@ -1,6 +1,5 @@
 import "../scss/styles.js";
-import { useState, useEffect } from "react";
-import Axios from "axios";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 
 import AllPosts from "./PostedEvents/AllPosts";
@@ -8,60 +7,57 @@ import MyEvents from "./MyEvents/MyEvents";
 import MyEventsSideBar from "./MyEvents/MyEventsSideBar";
 import CreateEventsSideBar from "./CreateEvent/CreateEventSidebar";
 import CreateEvent from "./CreateEvent/CreateEvent";
+import { useParams } from "react-router-dom";
 
-function App() {
+function MainPage() {
+	const userID = useParams().userID;
+	// console.log(userID);
 	const [showMyEvents, setShowMyEvents] = useState(false);
 
 	const handleCloseMyEvents = () => setShowMyEvents(false);
 	const handleShowMyEvents = () => setShowMyEvents(true);
 
-  const [showCreateEvent, setShowCreateEvent] = useState(false);
+	const [showCreateEvent, setShowCreateEvent] = useState(false);
 
 	const handleCloseCreateEvent = () => setShowCreateEvent(false);
 	const handleShowCreateEvent = () => setShowCreateEvent(true);
 
 	return (
 		<div className="App">
-			<h1>Event Blog</h1>
+			<h1 className="dashboard-header">Event Blog</h1>
 
-			<Button
-				variant="primary"
-				className="d-lg-none"
-				onClick={handleShowMyEvents}
-        size="sm"
-
-        
-			>
+			<button className="btn btn-reverse" onClick={handleShowMyEvents}>
 				View My Events
-			</Button>
+			</button>
 
-			<MyEventsSideBar show={showMyEvents} onHide={handleCloseMyEvents} />
+			<MyEventsSideBar
+				userID={userID}
+				show={showMyEvents}
+				onHide={handleCloseMyEvents}
+			/>
 
-			<Button
-				variant="primary"
-				className="d-lg-none"
-				onClick={handleShowCreateEvent}
-        size="sm"
-			>
+			<button className="btn" onClick={handleShowCreateEvent}>
 				Create Event
-			</Button>
-			<CreateEventsSideBar show={showCreateEvent} onHide={handleCloseCreateEvent} />
-
-      
+			</button>
+			<CreateEventsSideBar
+				userID={userID}
+				show={showCreateEvent}
+				onHide={handleCloseCreateEvent}
+			/>
 
 			<div className="body">
 				<div className="MyEvents MyEventsSideBar">
-					<MyEvents showTitle/>
+					<MyEvents userID={userID} showTitle />
 				</div>
 
-				<AllPosts />
+				<AllPosts userID={userID} />
 
 				<div className="CreateEvent CreateEventSideBar">
-        			<CreateEvent showTitle/>
+					<CreateEvent userID={userID} showTitle />
 				</div>
 			</div>
 		</div>
 	);
 }
 
-export default App;
+export default MainPage;
