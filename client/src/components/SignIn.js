@@ -28,6 +28,8 @@ const Signin = ({ setUser }) => {
 			.then((response) => {
 				// console.log(response.data);
 				setUser(response.data._id);
+				window.sessionStorage.setItem("user", response.data._id);
+				window.location.href = "/dashboard/" + response.data._id;
 			})
 			.catch((error) => {
 				console.log(error.response.status);

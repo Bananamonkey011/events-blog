@@ -10,9 +10,13 @@ import SignUp from "./components/SignUp.js";
 function App() {
 	const [user, setUser] = useState("");
 	const navigate = useNavigate();
+	useEffect(() => {
+		setUser(window.sessionStorage.getItem("user"));
+	},[]);
 
 	useEffect(() => {
-		if (user !== "") {
+		const path = window.location.pathname;
+		if (path !== "/" && path !== "/auth" && path !== "/sign-up" && user !== "" && user !== null) {
 			navigate("/dashboard/" + user);
 		}
 		// return <Redirect to={"/dashboard/"+user} />;
