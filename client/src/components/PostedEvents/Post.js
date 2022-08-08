@@ -1,9 +1,8 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { BsClipboardCheck } from "react-icons/bs";
-import { MdDeleteForever } from "react-icons/md";
+import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { useState } from "react";
 import axios from "axios";
 
@@ -45,6 +44,8 @@ const arrayBufferToBase64 = (buffer) => {
 };
 const Post = ({ post, userID }) => {
 	const [showDescription, setShowDescription] = useState(false);
+	const [editing, setEditing] = useState(false);
+
 	const MouseOver = () => {
 		setShowDescription(true);
 	};
@@ -55,13 +56,18 @@ const Post = ({ post, userID }) => {
 	const handleDelete = async (event) => {
 		const body = {
 			_id: post._id,
-			user_id: userID
-		}
+			user_id: userID,
+		};
 		await axios
 			.delete(process.env.REACT_APP_SERVER_URL + "/deleteEvent", {
 				data: body,
 			})
 			.then(window.location.reload());
+	};
+
+	const handleEdit = async (event) => {
+		// console.log(event);
+		setEditing(!editing);
 	};
 
 	const handleRSVP = async () => {
@@ -92,52 +98,64 @@ const Post = ({ post, userID }) => {
 			onMouseOut={MouseOut}
 			imgsrc={post.picture}
 		>
-			<Card.Img
-				className="post-img"
-				variant="top"
-				src={
-					arrayBufferToBase64(post.picture.data.data) === ""
-						? ""
-						: "data:image/jpeg;base64," +
-						  arrayBufferToBase64(post.picture.data.data)
-				}
-			/>
+			{true && 
+				<>
+					<Card.Img
+						className="post-img"
+						variant="top"
+						src={
+							arrayBufferToBase64(post.picture.data.data) === ""
+								? ""
+								: "data:image/jpeg;base64," +
+								  arrayBufferToBase64(post.picture.data.data)
+						}
+					/>
 
-			<div className="post-details">
-				<li className="post-location">{post.location}</li>
-				<li className="post-date">
-					{getFormatedDateTime(post.datetime)}
-				</li>
-			</div>
+					<div className="post-details">
+						<li className="post-location">{post.location}</li>
+						<li className="post-date">
+							{getFormatedDateTime(post.datetime)}
+						</li>
+					</div>
 
-			<Card.Body className="post-body">
-				<Card.Title className="post-title">{post.title}</Card.Title>
-				<Collapse in={showDescription}>
-					<Card.Text className="post-description">
-						{post.description}
-					</Card.Text>
-				</Collapse>
-			</Card.Body>
-			<div className="post-timestamp">
-				<p>
-					{new Date(post.modified).toLocaleString("en-US", {
-						day: "2-digit",
-						month: "short",
-						year: "numeric",
-						hour: "numeric",
-						minute: "numeric",
-						hour12: true,
-					})}
-				</p>
-				{post.modified !== post.created && <p>(updated)</p>}
-			</div>
+					<Card.Body className="post-body">
+						<Card.Title className="post-title">
+							{post.title}
+						</Card.Title>
+						<Collapse in={showDescription}>
+							<Card.Text className="post-description">
+								{post.description}
+							</Card.Text>
+						</Collapse>
+					</Card.Body>
+					<div className="post-timestamp">
+						<p>
+							{new Date(post.modified).toLocaleString("en-US", {
+								day: "2-digit",
+								month: "short",
+								year: "numeric",
+								hour: "numeric",
+								minute: "numeric",
+								hour12: true,
+							})}
+						</p>
+						{post.modified !== post.created && <p>(updated)</p>}
+					</div>
+				</>
+			}
+
 			<div className="post-btn-container">
 				<button className="btn" onClick={handleRSVP}>
 					RSVP <BsClipboardCheck />
 				</button>
+				{/* {post.createdBy === userID && (
+					<button className="btn btn-edit" onClick={handleEdit}>
+						<AiOutlineEdit />
+					</button>
+				)} */}
 				{post.createdBy === userID && (
 					<button className="btn btn-delete" onClick={handleDelete}>
-						<MdDeleteForever />
+						<AiOutlineDelete />
 					</button>
 				)}
 			</div>

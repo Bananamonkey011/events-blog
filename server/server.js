@@ -61,7 +61,15 @@ app.get("/getEvents", (req, res) => {
 		}
 	});
 });
-
+app.get("/getUser?:id", (req, res) => {
+	Users.findById(req.query.id, (err, result) => {
+		if (err) {
+			res.json(err);
+		} else {
+			res.json(result);
+		}
+	})
+})
 /**
  * @brief gets all events for a specific user
  * @query ObjectId associated with user

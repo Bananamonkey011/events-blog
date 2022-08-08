@@ -84,7 +84,7 @@ textarea::placeholder, input::placeholder {
 	color: black;
 }
 
-.btn-delete {
+.btn-delete, .btn-edit {
 	width: fit-content;
 }
 
@@ -158,8 +158,10 @@ textarea::placeholder, input::placeholder {
 }
 
 .post-btn-container {
+	width: 80%;
 	display: flex;
 	justify-content: space-evenly;
+	margin: auto;
 }
 // .post-img[src=""]:empty +
 .post-img{

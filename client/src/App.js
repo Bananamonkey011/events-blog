@@ -1,6 +1,11 @@
 import "./scss/styles.js";
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Redirect } from "react-router-dom";
+import {
+	Routes,
+	Route,
+	useNavigate,
+	Navigate,
+} from "react-router-dom";
 
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
@@ -12,12 +17,19 @@ function App() {
 	const navigate = useNavigate();
 	useEffect(() => {
 		setUser(window.sessionStorage.getItem("user"));
-	},[]);
+	}, []);
 
 	useEffect(() => {
 		const path = window.location.pathname;
-		if (path !== "/" && path !== "/auth" && path !== "/sign-up" && user !== "" && user !== null) {
-			navigate("/dashboard/" + user);
+		if (path !== "/" && path !== "/auth" && path !== "/sign-up") {
+			if (
+				window.sessionStorage.getItem("user") === null ||
+				window.sessionStorage.getItem("user") === ""
+			) {
+				navigate("/");
+			} else {
+				navigate("/dashboard");
+			}
 		}
 		// return <Redirect to={"/dashboard/"+user} />;
 	}, [user]);
@@ -28,7 +40,17 @@ function App() {
 				<Route path="/" element={<LandingPage />} />
 				<Route path="auth" element={<SignIn setUser={setUser} />} />
 				<Route path="sign-up" element={<SignUp />} />
-				<Route path="dashboard/:userID" element={<Dashboard />} />
+				<Route
+					path="dashboard/"
+					element={
+						window.sessionStorage.getItem("user") !== "" &&
+						window.sessionStorage.getItem("user") !== null ? (
+							<Dashboard />
+						) : (
+							<Navigate replace to="/" />
+						)
+					}
+				/>
 			</Routes>
 		</div>
 	);

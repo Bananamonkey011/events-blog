@@ -1,17 +1,24 @@
 import "../scss/styles.js";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import AllPosts from "./PostedEvents/AllPosts";
 import MyEvents from "./MyEvents/MyEvents";
 import MyEventsSideBar from "./MyEvents/MyEventsSideBar";
 import CreateEventsSideBar from "./CreateEvent/CreateEventSidebar";
 import CreateEvent from "./CreateEvent/CreateEvent";
-import { useParams } from "react-router-dom";
 
 function MainPage() {
-	const userID = useParams().userID;
-	// console.log(userID);
+	const userID = window.sessionStorage.getItem("user");
+	const [user, setUser] = useState(false);
+	useEffect(()=>{
+		axios.get(process.env.REACT_APP_SERVER_URL + "/getUser?id=" + userID).then(response => {
+			// console.log(response.data);
+			setUser(response.data);
+		})
+
+	},[userID]);
+
 	const [showMyEvents, setShowMyEvents] = useState(false);
 
 	const handleCloseMyEvents = () => setShowMyEvents(false);
@@ -25,6 +32,7 @@ function MainPage() {
 	return (
 		<div className="App">
 			<h1 className="dashboard-header">Eventbook</h1>
+			<h4 className="dashboard-header">Account: {user.username}</h4>
 
 			<button
 				className="btn btn-reverse btn-sidebar"
