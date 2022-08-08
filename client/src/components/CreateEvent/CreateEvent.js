@@ -3,8 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 import Button from "react-bootstrap/Button";
-import Placeholder from "react-bootstrap/Placeholder";
 import Form from "react-bootstrap/Form";
+import FormPlaceholder from "./FormPlaceholder";
 import Spinner from "react-bootstrap/Spinner";
 import { FaPaperPlane } from "react-icons/fa";
 
@@ -164,110 +164,113 @@ const CreateEvent = ({ showTitle, userID }) => {
 	return (
 		<div className="create-event">
 			{showTitle && <h1 className="create-event-title">Create Event</h1>}
-			<Form className="create-event-form" onSubmit={handleSubmit}>
-				<Form.Group className="create-event-form-group">
-					<label className="create-event-form-label" htmlFor="title">
-						Event Title:
-					</label>
-					<input
-						className="create-event-form-entry"
-						name="title"
-						required
-						onChange={handleChange}
-						type="text"
-						placeholder="Enter Event Title..."
-						value={formData.title}
-					/>
-				</Form.Group>
+			{!creatingEvent && 
+				<Form className="create-event-form" onSubmit={handleSubmit}>
+					<Form.Group className="create-event-form-group">
+						<label
+							className="create-event-form-label"
+							htmlFor="title"
+						>
+							Event Title:
+						</label>
+						<input
+							className="create-event-form-entry"
+							name="title"
+							required
+							onChange={handleChange}
+							type="text"
+							placeholder="Enter Event Title..."
+							value={formData.title}
+						/>
+					</Form.Group>
 
-				<Form.Group className="create-event-form-group">
-					<label
-						className="create-event-form-label"
-						htmlFor="location"
-					>
-						Event Location:
-					</label>
-					<input
-						className="create-event-form-entry"
-						required
-						name="location"
-						onChange={handleChange}
-						type="text"
-						placeholder="Enter Event Location..."
-						value={formData.location}
-					/>
-				</Form.Group>
+					<Form.Group className="create-event-form-group">
+						<label
+							className="create-event-form-label"
+							htmlFor="location"
+						>
+							Event Location:
+						</label>
+						<input
+							className="create-event-form-entry"
+							required
+							name="location"
+							onChange={handleChange}
+							type="text"
+							placeholder="Enter Event Location..."
+							value={formData.location}
+						/>
+					</Form.Group>
 
-				<Form.Group className="create-event-form-group">
-					<label
-						className="create-event-form-label"
-						htmlFor="datetime"
-					>
-						Event Date:
-					</label>
-					<input
-						className="create-event-form-entry"
-						required
-						name="datetime"
-						onChange={handleChange}
-						type="datetime-local"
-						// defaultValue={DefaultDateTimeStr}
-						value={formData.datetime}
-					/>
-				</Form.Group>
+					<Form.Group className="create-event-form-group">
+						<label
+							className="create-event-form-label"
+							htmlFor="datetime"
+						>
+							Event Date:
+						</label>
+						<input
+							className="create-event-form-entry"
+							required
+							name="datetime"
+							onChange={handleChange}
+							type="datetime-local"
+							// defaultValue={DefaultDateTimeStr}
+							value={formData.datetime}
+						/>
+					</Form.Group>
 
-				<Form.Group className="create-event-form-group">
-					<label
-						className="create-event-form-label"
-						htmlFor="description"
-					>
-						Description:
-					</label>
-					<textarea
-						className="create-event-form-entry"
-						name="description"
-						onChange={handleChange}
-						placeholder="Enter Description..."
-						rows="4"
-						value={formData.description}
-					/>
-				</Form.Group>
+					<Form.Group className="create-event-form-group">
+						<label
+							className="create-event-form-label"
+							htmlFor="description"
+						>
+							Description:
+						</label>
+						<textarea
+							className="create-event-form-entry"
+							name="description"
+							onChange={handleChange}
+							placeholder="Enter Description..."
+							rows="4"
+							value={formData.description}
+						/>
+					</Form.Group>
 
-				<Form.Group className="create-event-form-group">
-					<label
-						className="create-event-form-label"
-						htmlFor="picture"
-					>
-						Event Picture:
-					</label>
-					<input
-						className="create-event-form-entry"
-						name="picture"
-						onChange={handleChange}
-						type="file"
-						accept="image/png, image/jpeg"
-					/>
-				</Form.Group>
-				{fileUploading && (
-					<p className="infomsg">
-						File upload in progress
-						{[...Array(3)].map((e, i) => (
-							<Spinner
-								key={i}
-								as="span"
-								animation="grow"
-								size="sm"
-								style={{
-									width: ".2rem",
-									height: ".2rem",
-									margin: ".2rem",
-									animationDelay: i * 100 + "ms",
-								}}
-							/>
-						))}
-					</p>
-				)}
-				{!creatingEvent && (
+					<Form.Group className="create-event-form-group">
+						<label
+							className="create-event-form-label"
+							htmlFor="picture"
+						>
+							Event Picture:
+						</label>
+						<input
+							className="create-event-form-entry"
+							name="picture"
+							onChange={handleChange}
+							type="file"
+							accept="image/png, image/jpeg"
+						/>
+					</Form.Group>
+					{fileUploading && (
+						<p className="infomsg">
+							File upload in progress
+							{[...Array(3)].map((e, i) => (
+								<Spinner
+									key={i}
+									as="span"
+									animation="grow"
+									size="sm"
+									style={{
+										width: ".2rem",
+										height: ".2rem",
+										margin: ".2rem",
+										animationDelay: i * 100 + "ms",
+									}}
+								/>
+							))}
+						</p>
+					)}
 					<Button
 						type="submit"
 						className="btn btn-primary"
@@ -275,33 +278,10 @@ const CreateEvent = ({ showTitle, userID }) => {
 					>
 						Submit <FaPaperPlane />
 					</Button>
-				)}
+				</Form>
+			}
 
-				{creatingEvent && (
-					<Button
-						type="submit"
-						className="btn btn-primary"
-						disabled={fileUploading || creatingEvent}
-					>
-						Submit{" "}
-						<Spinner as="span" animation="border" size="sm" />
-					</Button>
-				)}
-			</Form>
-
-			<Form style={{ width: "18rem" }}>
-				<div>
-					<Placeholder as={Form.Group} animation="glow">
-						<Placeholder xs={6} />
-					</Placeholder>
-					<Placeholder as={Form.Group} animation="glow">
-						<Placeholder xs={7} /> <Placeholder xs={4} />{" "}
-						<Placeholder xs={4} /> <Placeholder xs={6} />{" "}
-						<Placeholder xs={8} />
-					</Placeholder>
-					<Placeholder.Button variant="primary" xs={6} />
-				</div>
-			</Form>
+			<FormPlaceholder show={creatingEvent} />
 		</div>
 	);
 };

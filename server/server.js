@@ -301,10 +301,14 @@ app.put("/unRSVP", (req, res) => {
 		});
 });
 
+/**
+ * @brief deletes event from db and removes it from creating user's rsvp list
+ *
+ */
 app.delete("/deleteEvent", (req, res) => {
 	console.log("deleteEvent");
-	Users.updateOne(
-		{ _id: req.body.user_id },
+	Users.updateMany(
+		{ events: req.body._id },
 		{ $pull: { events: req.body._id } },
 		(err, result) => {
 			if (err) {
@@ -314,6 +318,7 @@ app.delete("/deleteEvent", (req, res) => {
 			}
 		}
 	).clone();
+
 	Events.deleteOne({ _id: req.body._id }, (err, result) => {
 		if (err) {
 			res.json(err);

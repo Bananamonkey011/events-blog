@@ -53,9 +53,13 @@ const Post = ({ post, userID }) => {
 	};
 
 	const handleDelete = async (event) => {
+		const body = {
+			_id: post._id,
+			user_id: userID
+		}
 		await axios
 			.delete(process.env.REACT_APP_SERVER_URL + "/deleteEvent", {
-				data: post,
+				data: body,
 			})
 			.then(window.location.reload());
 	};

@@ -26,7 +26,7 @@ const Signin = ({ setUser }) => {
 		axios
 			.post(process.env.REACT_APP_SERVER_URL + "/sign-in", formData)
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				setUser(response.data._id);
 			})
 			.catch((error) => {
