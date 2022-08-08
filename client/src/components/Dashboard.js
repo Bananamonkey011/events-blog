@@ -24,21 +24,23 @@ function MainPage() {
 
 	return (
 		<div className="App">
-			<h1 className="dashboard-header">Event Blog</h1>
+			<h1 className="dashboard-header">Eventbook</h1>
 
-			<button className="btn btn-reverse" onClick={handleShowMyEvents}>
+			<button
+				className="btn btn-reverse btn-sidebar"
+				onClick={handleShowMyEvents}
+			>
 				View My Events
 			</button>
-
+			<button className="btn btn-sidebar" onClick={handleShowCreateEvent}>
+				Create Event
+			</button>
 			<MyEventsSideBar
 				userID={userID}
 				show={showMyEvents}
 				onHide={handleCloseMyEvents}
 			/>
 
-			<button className="btn" onClick={handleShowCreateEvent}>
-				Create Event
-			</button>
 			<CreateEventsSideBar
 				userID={userID}
 				show={showCreateEvent}

@@ -33,12 +33,12 @@ const getFormatedDateTime = (ISO) => {
 	);
 };
 const arrayBufferToBase64 = (buffer) => {
-    var binary = '';
-    var bytes = [].slice.call(new Uint8Array(buffer));
-    bytes.forEach((b) => binary += String.fromCharCode(b));
+	var binary = "";
+	var bytes = [].slice.call(new Uint8Array(buffer));
+	bytes.forEach((b) => (binary += String.fromCharCode(b)));
 	// console.log(window.btoa(binary));
 	if (window.btoa(binary).length > 0) {
-    	return window.btoa(binary);
+		return window.btoa(binary);
 	} else {
 		return "";
 	}
@@ -53,9 +53,11 @@ const Post = ({ post, userID }) => {
 	};
 
 	const handleDelete = async (event) => {
-		await axios.delete(process.env.REACT_APP_SERVER_URL + "/deleteEvent", {data: post}).then(
-			window.location.reload()
-		);
+		await axios
+			.delete(process.env.REACT_APP_SERVER_URL + "/deleteEvent", {
+				data: post,
+			})
+			.then(window.location.reload());
 	};
 
 	const handleRSVP = async () => {
@@ -65,20 +67,18 @@ const Post = ({ post, userID }) => {
 				event_id: post._id,
 			})
 			.then((response) => {
-				// console.log(response.data);
-				// console.log(post._id)
 				if (response.data.modifiedCount > 0) {
 					// window.location.reload();
 					console.log("reload");
 				}
+			})
+			.then(() => {
+				console.log("reload");
+				window.location.href =
+					process.env.REACT_APP_SERVER_URL +
+					"/download-ics-event?eid=" +
+					post._id;
 			});
-		// .then(
-		// 	window.open(
-		// 		process.env.REACT_APP_SERVER_URL +
-		// 			"/download-ics-event?eid=" +
-		// 			post._id
-		// 	)
-		// );
 	};
 
 	return (
@@ -88,7 +88,16 @@ const Post = ({ post, userID }) => {
 			onMouseOut={MouseOut}
 			imgsrc={post.picture}
 		>
-			<Card.Img className="post-img" variant="top" src={arrayBufferToBase64(post.picture.data.data) === ""? "":'data:image/jpeg;base64,'+arrayBufferToBase64(post.picture.data.data)} />
+			<Card.Img
+				className="post-img"
+				variant="top"
+				src={
+					arrayBufferToBase64(post.picture.data.data) === ""
+						? ""
+						: "data:image/jpeg;base64," +
+						  arrayBufferToBase64(post.picture.data.data)
+				}
+			/>
 
 			<div className="post-details">
 				<li className="post-location">{post.location}</li>

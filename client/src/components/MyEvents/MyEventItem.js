@@ -84,14 +84,6 @@ const MyEventItem = ({ uid, event, updateEvents }) => {
 					<Card.Header className="my-event-item-title">
 						{event.title}
 					</Card.Header>
-					<div className="my-event-item-details">
-						<div className="my-event-item-location">
-							{event.location}
-						</div>
-						<div className="my-event-item-date">
-							{getFormatedDateTime(event.datetime)}
-						</div>
-					</div>
 				</Card.ImgOverlay>
 			</Card>
 
@@ -102,7 +94,15 @@ const MyEventItem = ({ uid, event, updateEvents }) => {
 				timeout={500}
 			>
 				<Card>
-					<Card.Body>
+					<div className="my-event-item-details">
+						<div className="my-event-item-location">
+							{event.location}
+						</div>
+						<div className="my-event-item-date">
+							{getFormatedDateTime(event.datetime)}
+						</div>
+					</div>
+					<Card.Body style={{padding: '20px'}}>
 						<Card.Text>{event.description}</Card.Text>
 					</Card.Body>
 					<Button onClick={handleUnRSVP}>

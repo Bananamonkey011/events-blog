@@ -57,6 +57,7 @@ const SignUp = () => {
 					setTakenEmail(false);
 					setTakenUserName(false);
 					e.target.reset();
+					window.location.href = '/auth'
 				})
 				.catch((error) => {
 					console.log(error.request.status);

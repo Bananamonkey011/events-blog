@@ -2,7 +2,8 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
-import Button from "react-bootstrap/esm/Button";
+import Button from "react-bootstrap/Button";
+import Placeholder from "react-bootstrap/Placeholder";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { FaPaperPlane } from "react-icons/fa";
@@ -41,6 +42,7 @@ const CreateEvent = ({ showTitle, userID }) => {
 	const DefaultDateTime = new Date(Date.now() + 1000 * 3600 * 24);
 	const DefaultDateTimeStr = getDateString(DefaultDateTime);
 	const [fileUploading, setFileUploading] = useState(false);
+	const [creatingEvent, setCreatingEvent] = useState(false);
 	// console.log(DefaultDateTimeStr);
 
 	const [formData, setFormData] = useState({
@@ -54,6 +56,7 @@ const CreateEvent = ({ showTitle, userID }) => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		setCreatingEvent(true);
 		if (!fileUploading) {
 			const dateinISO = new Date(formData.datetime).toISOString();
 			formData.datetime = dateinISO;
@@ -72,14 +75,30 @@ const CreateEvent = ({ showTitle, userID }) => {
 
 			await axios
 				.post(process.env.REACT_APP_SERVER_URL + "/createEvent", fd)
-				.then((error, response) => {
+				.then((response, error) => {
 					if (error) {
 						console.log(error);
+						return error;
 					} else {
 						console.log(response);
+						return response;
 					}
 				})
-				.then(window.location.reload());
+				.then((response) => {
+					console.log(response);
+					const body = {
+						user_id: userID,
+						event_id: response.data._id,
+					};
+					axios.put(process.env.REACT_APP_SERVER_URL + "/RSVP", body);
+				})
+				.then(() => {
+					setCreatingEvent(false);
+					window.location.reload();
+				})
+				.catch((e) => {
+					alert(e.message);
+				});
 
 			setFormData({
 				title: "",
@@ -232,21 +251,56 @@ const CreateEvent = ({ showTitle, userID }) => {
 				{fileUploading && (
 					<p className="infomsg">
 						File upload in progress
-						{[...Array(3)].map((e, i) => <Spinner
-							as="span"
-							animation="grow"
-							size="sm"
-							style={{width: '.2rem', height: '.2rem', margin: '.2rem', animationDelay: i*100+"ms"}}
-						/>)}
+						{[...Array(3)].map((e, i) => (
+							<Spinner
+								key={i}
+								as="span"
+								animation="grow"
+								size="sm"
+								style={{
+									width: ".2rem",
+									height: ".2rem",
+									margin: ".2rem",
+									animationDelay: i * 100 + "ms",
+								}}
+							/>
+						))}
 					</p>
 				)}
-				<Button
-					type="submit"
-					className="btn btn-primary"
-					disabled={fileUploading}
-				>
-					Submit <FaPaperPlane />
-				</Button>
+				{!creatingEvent && (
+					<Button
+						type="submit"
+						className="btn btn-primary"
+						disabled={fileUploading || creatingEvent}
+					>
+						Submit <FaPaperPlane />
+					</Button>
+				)}
+
+				{creatingEvent && (
+					<Button
+						type="submit"
+						className="btn btn-primary"
+						disabled={fileUploading || creatingEvent}
+					>
+						Submit{" "}
+						<Spinner as="span" animation="border" size="sm" />
+					</Button>
+				)}
+			</Form>
+
+			<Form style={{ width: "18rem" }}>
+				<div>
+					<Placeholder as={Form.Group} animation="glow">
+						<Placeholder xs={6} />
+					</Placeholder>
+					<Placeholder as={Form.Group} animation="glow">
+						<Placeholder xs={7} /> <Placeholder xs={4} />{" "}
+						<Placeholder xs={4} /> <Placeholder xs={6} />{" "}
+						<Placeholder xs={8} />
+					</Placeholder>
+					<Placeholder.Button variant="primary" xs={6} />
+				</div>
 			</Form>
 		</div>
 	);

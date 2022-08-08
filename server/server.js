@@ -8,8 +8,8 @@ var fs = require("fs");
 var path = require("path");
 const { writeFileSync } = require("fs");
 const ics = require("ics");
-const bcrypt = require("bcrypt");
-const { promisify } = require('util')
+const bcrypt = require("bcryptjs");
+const { promisify } = require("util");
 
 app.use(express.static("public"));
 app.use(cors());
@@ -18,8 +18,6 @@ app.use(bodyParser.urlencoded({ limit: "10gb", extended: true }));
 
 const Events = require("./models/Events");
 const Users = require("./models/Users");
-const { events } = require("./models/Events");
-const { resolve } = require("dns/promises");
 
 mongoose.connect(
 	"mongodb+srv://user123:Password123@cluster0.mdmj9e5.mongodb.net/event-blog?retryWrites=true&w=majority"
@@ -31,7 +29,6 @@ mongoose.connect(
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		var dirName = path.join(process.cwd(), "./uploads/");
-		console.log(dirName);
 		if (!fs.existsSync(dirName)) {
 			fs.mkdirSync(dirName);
 		}
@@ -56,7 +53,6 @@ app.get("/", (req, res) => {
  * @brief gets all events from database
  */
 app.get("/getEvents", (req, res) => {
-	console.log("getEvents");
 	Events.find({}, (err, result) => {
 		if (err) {
 			res.json(err);
@@ -71,8 +67,6 @@ app.get("/getEvents", (req, res) => {
  * @query ObjectId associated with user
  */
 app.get("/getMyEvents?:id", (req, res) => {
-	console.log("getMyEvents");
-	// console.log(req.query.id);
 	Users.findById(req.query.id)
 		.populate("events")
 		.select("events")
@@ -92,51 +86,7 @@ app.get("/getMyEvents?:id", (req, res) => {
  */
 app.get("/download-ics-event?:eid", (req, res) => {
 	console.log("downlaod ics");
-	console.log(req.query.eid);
-	Events.findById(req.query.eid, (err, data) => {
-		if (err) {
-			console.log(err);
-		} else {
-			const date = new Date(data.datetime.toISOString()).toLocaleString(
-				"si-LK",
-				{
-					year: "numeric",
-					month: "2-digit",
-					day: "2-digit",
-				}
-			);
-			const time = new Date(data.datetime.toISOString()).toLocaleString(
-				"si-LK",
-				{
-					hour: "numeric",
-					minute: "numeric",
-				}
-			);
-			// console.log((date+" " + time).split(/[-T:._ ]+/).slice(0, 5).map(str => Number(str)));
-			// console.log(data.datetime.toISOString().split(/[-T:._ ]+/).slice(0, 5).map(str => Number(str)));
-			const calEvent = {
-				start: (date + " " + time)
-					.split(/[-T:._ ]+/)
-					.slice(0, 5)
-					.map((str) => Number(str)),
-				duration: { hours: 3 },
-				title: data.title,
-				description: data.description,
-				location: data.location,
-			};
-
-			ics.createEvent(calEvent, (error, value) => {
-				if (error) {
-					console.log(error);
-					return;
-				}
-				// console.log(value);
-				writeFileSync(`${__dirname}/public/event.ics`, value);
-			});
-		}
-	})
-		.clone()
-		.then(res.sendFile(`${__dirname}/public/event.ics`));
+	res.download(`${__dirname}/uploads/` + req.query.eid + ".ics", "event.ics");
 });
 
 /**
@@ -144,12 +94,9 @@ app.get("/download-ics-event?:eid", (req, res) => {
  * @body username/email and password combination
  */
 app.post("/sign-in", async (req, res) => {
-	console.log("signin");
-	console.log(req.body.email, req.body.password);
 	const account = await Users.findOne({
 		$or: [{ email: req.body.email }, { username: req.body.email }],
 	}).lean();
-	console.log(req.body.password, account.password);
 	if (!account) {
 		res.status(404).send({ message: "Account Not Found" });
 	} else if (!bcrypt.compareSync(req.body.password, account.password)) {
@@ -172,23 +119,64 @@ app.post("/sign-in", async (req, res) => {
  * @brief Create a new event
  * @body event details
  */
-app.post("/createEvent", upload.single("picture"), async (req, res) => {
+app.post("/createEvent", upload.single("picture"), (req, res) => {
 	console.log("createEvent");
-	// console.log(req.file);
-	// console.log(req.body);
 
 	const item = JSON.parse(req.body.state);
-	// console.log(item);
+
 	item.picture = {
 		data: fs.readFileSync(
 			path.join(__dirname + "/uploads/" + req.file.filename)
 		),
 		contentType: "image/png",
 	};
-	// console.log(item);
+
+	const date = new Date(new Date(item.datetime).toISOString()).toLocaleString(
+		"si-LK",
+		{
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+		}
+	);
+	const time = new Date(new Date(item.datetime).toISOString()).toLocaleString(
+		"si-LK",
+		{
+			hour: "numeric",
+			minute: "numeric",
+		}
+	);
+	const calEvent = {
+		start: (date + " " + time)
+			.split(/[-T:._ ]+/)
+			.slice(0, 5)
+			.map((str) => Number(str)),
+		duration: { hours: 3 },
+		title: item.title,
+		description: item.description,
+		location: item.location,
+	};
+
 	const newItem = new Events(item);
-	await newItem.save();
-	await unlinkAsync(req.file.path);
+	newItem.save().then((result, err) => {
+		if (err) {
+			res.json(err);
+		} else {
+			ics.createEvent(calEvent, (error, value) => {
+				if (error) {
+					console.log(error);
+					return;
+				}
+				writeFileSync(
+					`${__dirname}/uploads/` + result._id + ".ics",
+					value
+				);
+			});
+			res.json(result);
+		}
+	});
+	unlinkAsync(req.file.path);
+
 	// res.json(item);
 });
 
@@ -211,7 +199,7 @@ app.post("/registerUser", async (req, res) => {
 	} else {
 		const salt = await bcrypt.genSalt(10);
 		user.password = await bcrypt.hash(user.password, salt);
-		console.log(user.password);
+		// console.log(user.password)
 		// console.log(bcrypt.compareSync(orgPw, user.password));
 		// console.log(bcrypt.compareSync("pass", "$2b$10$2GjXXg0uYM.KpJ7ReGYNceJIdaxBjZLLKvL1xlXizahYBAEiQRUKi"));
 		// console.log(bcrypt.compareSync("Pass", "$2b$10$2GjXXg0uYM.KpJ7ReGYNceJIdaxBjZLLKvL1xlXizahYBAEiQRUKi"));
@@ -235,7 +223,6 @@ app.post("/registerUser", async (req, res) => {
 app.put("/RSVP", (req, res) => {
 	console.log("rsvp");
 	let modified = 0;
-	// console.log(Users.exists({_id: req.body.user_id, events: req.body.event_id}));
 	Users.updateOne(
 		{ _id: req.body.user_id },
 		{ $addToSet: { events: req.body.event_id } },
@@ -279,8 +266,6 @@ app.put("/RSVP", (req, res) => {
  */
 app.put("/unRSVP", (req, res) => {
 	console.log("unrsvp");
-	// console.log(req.body.event_id);
-	// console.log(req.body.user_id);
 	Users.updateOne(
 		{ _id: req.body.user_id },
 		{ $pull: { events: req.body.event_id } },
@@ -316,15 +301,32 @@ app.put("/unRSVP", (req, res) => {
 		});
 });
 
-app.delete("/deleteEvent", async (req, res) => {
+app.delete("/deleteEvent", (req, res) => {
 	console.log("deleteEvent");
-	await Events.deleteOne({ _id: req.body._id }, (err, result) => {
+	Users.updateOne(
+		{ _id: req.body.user_id },
+		{ $pull: { events: req.body._id } },
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(result);
+			}
+		}
+	).clone();
+	Events.deleteOne({ _id: req.body._id }, (err, result) => {
 		if (err) {
 			res.json(err);
 		} else {
 			res.json(result);
 		}
 	}).clone();
+
+	try {
+		unlinkAsync(`${__dirname}/uploads/` + req.body._id + ".ics");
+	} catch (err) {
+		console.log(err);
+	}
 });
 
 app.listen(process.env.PORT || 3001, () => {

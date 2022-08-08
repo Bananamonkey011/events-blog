@@ -20,7 +20,7 @@ const AllPosts = ({userID}) => {
 	return (
 		<div className="Posts">
 			{loading && <Spinner animation="border" />}
-			{posts?.map((post) => {
+			{posts.map((post) => {
 				return <Post key={post._id} post={post} userID={userID}/>;
 			}, [])}
 		</div>

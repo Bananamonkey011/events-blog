@@ -76,7 +76,9 @@ textarea::placeholder, input::placeholder {
 	border-radius: 0px 20px / 0px 20px;
 	color:black
 }
-
+.btn-sidebar {
+	display: inline-block;
+}
 .btn:disabled {
 	background-color: darken(aquamarine, .5);
 	color: black;
@@ -223,6 +225,11 @@ textarea::placeholder, input::placeholder {
 	color: white;
 	display: none;
 }
+
+.my-event-item-details {
+	box-sizing: border-box;
+
+}
 .my-event-item {
 	width: 90%;
 	margin: 20px auto;
@@ -250,8 +257,12 @@ textarea::placeholder, input::placeholder {
 	max-height: 20vh;
 }
 .my-event-item-thumbnail-container {
-	display: grid;
-	grid-template-rows: 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
+	height: fit-content;
+	justify-content: center;
+	align-content: center;
+	height: 100%;
 }
 .card-img[src=""] {
 	height: 20vh;
@@ -269,12 +280,13 @@ textarea::placeholder, input::placeholder {
 	background-color: rgb(255, 255, 255, 0.3);
 	color: black;
 }
+
 .my-event-item-details {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 }
 .my-event-item-location {
-	padding: 20px;
+	padding-left: 20px;
 	align-self: center;
 	justify-self: left;
 }
@@ -383,7 +395,9 @@ textarea::placeholder, input::placeholder {
 	.post-container {
 		border-radius: 0.5vw 5vw / 0.5vw 5vw;
 	}
-
+	.btn-sidebar {
+		display: none;
+	}
 	.card-img-top {
 		height: 30vw;
 	}

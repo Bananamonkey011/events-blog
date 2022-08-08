@@ -1,13 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
-import {BiArrowBack} from "react-icons/bi"
+import { BiArrowBack } from "react-icons/bi";
+import Alert from "react-bootstrap/alert";
 
 const Signin = ({ setUser }) => {
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 	});
+	const [showAlert, setShowAlert] = useState(false);
+
 	const handleChange = (e) => {
 		// console.log(formData);
 		setFormData({
@@ -16,6 +19,7 @@ const Signin = ({ setUser }) => {
 		});
 		setFormData({ ...formData, [e.target.id]: e.target.value });
 	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log("submit");
@@ -27,6 +31,7 @@ const Signin = ({ setUser }) => {
 			})
 			.catch((error) => {
 				console.log(error.response.status);
+				setShowAlert(true);
 			});
 	};
 
@@ -38,7 +43,7 @@ const Signin = ({ setUser }) => {
 	return (
 		<div className="SignIn">
 			<button className="return-to-dashboard" onClick={returnToDashboard}>
-				<BiArrowBack/>
+				<BiArrowBack />
 			</button>
 			<h1 className="signin-title">Sign-in</h1>
 
@@ -66,7 +71,14 @@ const Signin = ({ setUser }) => {
 								// value={formData.password}
 							/>
 						</div>
-
+						<Alert
+							show={showAlert}
+							dismissible
+							variant="danger"
+							onClick={()=>{setShowAlert(false)}}
+						>
+							Incorrect Username or Password
+						</Alert>
 						<button type="submit" className="btn btn-sign-in">
 							Sign In
 						</button>
