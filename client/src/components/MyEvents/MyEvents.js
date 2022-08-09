@@ -13,7 +13,7 @@ const MyEvents = ({ showTitle, userID }) => {
 
 	useEffect(() => {
 		axios
-			.get(process.env.REACT_APP_SERVER_URL + "/getMyEvents?id=" + userID)
+			.get(process.env.REACT_APP_SERVER_URL + "/getMyEvents/" + userID)
 			.then((response) => {
 				// userid = response.data._id;
 				setMyEvents(response.data.events);

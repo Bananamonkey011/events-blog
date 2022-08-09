@@ -46,20 +46,45 @@ const unlinkAsync = promisify(fs.unlink);
  * @brief test event
  */
 app.get("/", (req, res) => {
-	res.send("This is a test");
+	var i = 1,
+		max = 10;
+
+	//set the appropriate HTTP header
+	res.setHeader("Content-Type", "text/html");
+
+	//send multiple responses to the client
+	for (; i <= max; i++) {
+		res.write("<h1>This is the response #: " + i + "</h1>");
+	}
+
+	//end the response process
+	res.end();
 });
 
 /**
  * @brief gets all events from database
  */
-app.get("/getEvents", (req, res) => {
-	Events.find({}, (err, result) => {
-		if (err) {
-			res.json(err);
-		} else {
-			res.json(result);
-		}
-	});
+app.get("/getEvents/:pg/:numResults", (req, res) => {
+	// console.log(req.params.pg+ " "+req.params.numResults);
+	const page = req.params.pg;
+	const numResults = req.params.numResults;
+	Events.find()
+		.sort([["modified", -1]])
+		.skip(page * numResults)
+		.limit(numResults)
+		.exec(function (err, events) {
+			Events.count().exec(function (err, count) {
+				if (err) {
+					res.json(err);
+				} else {
+					res.json({
+						events: events,
+						page: page,
+						pages: count / numResults,
+					});
+				}
+			});
+		});
 });
 app.get("/getUser?:id", (req, res) => {
 	Users.findById(req.query.id, (err, result) => {
@@ -68,14 +93,15 @@ app.get("/getUser?:id", (req, res) => {
 		} else {
 			res.json(result);
 		}
-	})
-})
+	});
+});
 /**
  * @brief gets all events for a specific user
  * @query ObjectId associated with user
  */
-app.get("/getMyEvents?:id", (req, res) => {
-	Users.findById(req.query.id)
+app.get("/getMyEvents/:id", (req, res) => {
+
+	Users.findById(req.params.id)
 		.populate("events")
 		.select("events")
 		.exec((err, result) => {

@@ -3,7 +3,7 @@
 	margin: 0;
 }
 h1 {
-	margin: 0
+	margin: 0;
 }
 
 p {
@@ -19,7 +19,8 @@ label {
 	color: white;
 }
 
-textarea, input {
+textarea,
+input {
 	width: 90%;
 	height: fit-content;
 	background-color: rgb(255, 255, 255, 0.25);
@@ -32,7 +33,8 @@ textarea, input {
 	justify-self: center;
 }
 
-textarea::placeholder, input::placeholder {
+textarea::placeholder,
+input::placeholder {
 	color: lightgray;
 }
 
@@ -45,6 +47,7 @@ textarea::placeholder, input::placeholder {
 }
 .body {
 	display: grid;
+	overflow: hidden;
 	grid-template-columns: 1fr;
 }
 
@@ -63,7 +66,7 @@ textarea::placeholder, input::placeholder {
 	position: absolute;
 	top: 2%;
 	left: 5%;
-	background: none ;
+	background: none;
 	border: none;
 	font-size: 300%;
 }
@@ -74,17 +77,18 @@ textarea::placeholder, input::placeholder {
 	border: none;
 	background-color: aquamarine;
 	border-radius: 0px 20px / 0px 20px;
-	color:black
+	color: black;
 }
 .btn-sidebar {
 	display: inline-block;
 }
 .btn:disabled {
-	background-color: darken(aquamarine, .5);
+	background-color: darken(aquamarine, 0.5);
 	color: black;
 }
 
-.btn-delete, .btn-edit {
+.btn-delete,
+.btn-edit {
 	width: fit-content;
 }
 
@@ -92,16 +96,15 @@ textarea::placeholder, input::placeholder {
 	color: white;
 }
 
-
 .btn:focus {
 	outline: none;
 	box-shadow: none;
 	background-color: white;
-	border: 5px white transparent
+	border: 5px white transparent;
 }
-.btn:hover{
+.btn:hover {
 	background-color: white;
-	border: 5px white transparent
+	border: 5px white transparent;
 }
 
 .btn-reverse {
@@ -115,7 +118,7 @@ textarea::placeholder, input::placeholder {
 .landing-heading-border {
 	// height: 15vh;
 	background: aquamarine;
-} 
+}
 .landing-heading-container-bg {
 	background-color: aquamarine;
 }
@@ -135,13 +138,19 @@ textarea::placeholder, input::placeholder {
 	border-top-right-radius: 45% 60%;
 }
 
-.btn-login, .btn-register {
+.btn-login,
+.btn-register {
 	width: 30%;
 	min-width: 150px;
 }
 // Posts
 .Posts {
 	padding-inline: 5%;
+	height: fit-content;
+	max-height: 85vh;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
 }
 .post-container {
 	margin: 5% auto;
@@ -153,8 +162,8 @@ textarea::placeholder, input::placeholder {
 	background-color: rgb(255, 255, 255, 0.5);
 }
 
-.dashboard-header{
-	color:white;
+.dashboard-header {
+	color: white;
 }
 
 .post-btn-container {
@@ -164,7 +173,7 @@ textarea::placeholder, input::placeholder {
 	margin: auto;
 }
 // .post-img[src=""]:empty +
-.post-img{
+.post-img {
 	max-height: 35vh;
 }
 .post-img[src=""] {
@@ -222,6 +231,11 @@ textarea::placeholder, input::placeholder {
 
 .my-events {
 	background-color: darkslategray;
+	height: fit-content;
+	max-height: 85vh;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
 }
 .my-events-title {
 	color: white;
@@ -230,7 +244,6 @@ textarea::placeholder, input::placeholder {
 
 .my-event-item-details {
 	box-sizing: border-box;
-
 }
 .my-event-item {
 	width: 90%;
@@ -245,7 +258,7 @@ textarea::placeholder, input::placeholder {
 	transition: 0.5s;
 	// background-color: rgb(0, 0, 0, 0.5);
 	// background: rgb(4, 11, 153, 0);
-	background: rgb(255, 255, 255,.2)
+	background: rgb(255, 255, 255, 0.2);
 }
 .my-event-item:hover {
 	.my-event-item-thumbnail {
@@ -306,9 +319,14 @@ textarea::placeholder, input::placeholder {
 }
 .create-event {
 	justify-content: center;
+	height: fit-content;
+	max-height: 85vh;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
 }
 .create-event-title {
-	color:white;
+	color: white;
 	display: none;
 }
 .create-event-form {
@@ -319,41 +337,38 @@ textarea::placeholder, input::placeholder {
 	text-align: center;
 }
 
-
-
-
 // SignIn
-.SignIn{
-	
-
+.SignIn {
 }
-.signin-title, .signup-title {
+.signin-title,
+.signup-title {
 	background-color: aquamarine;
 	padding: 10vh;
 	border-bottom-left-radius: 45% 70%;
-
 }
 
-.signup-form-container-bg, .signin-form-container-bg {
+.signup-form-container-bg,
+.signin-form-container-bg {
 	background-color: aquamarine;
 }
-.signin-form-container-border, .signup-form-container-border {
+.signin-form-container-border,
+.signup-form-container-border {
 	background-color: darkslategray;
 	padding-top: 10vh;
 	border-top-right-radius: 45% 30vh;
 }
-.signin-form, .signup-form {
+.signin-form,
+.signup-form {
 	display: inline-block;
 	width: 80%;
 	max-width: 700px;
 }
-.signin-group, .signup-group {
+.signin-group,
+.signup-group {
 	display: grid;
 	grid-template-columns: 1fr 4fr;
 	margin: 25px;
 }
-
-
 
 @media screen and (max-height: 1000px) {
 	.card-img[src=""] {
